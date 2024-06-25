@@ -88,13 +88,13 @@ router.post("/register", async (req, res, next) => {
 router.post("/jtoken", (req, res) => {
   // The user is now available in req.user
   let user = req.body.user;
-  const token = user.token;
-  if (token) console.log("Token received.".yellow);
-
-  if (token) {
+  if (user && user.token) {
+    const token = user.token;
+    console.log("Token received.".yellow);
     try {
       const decoded = jwt.verify(token, SECRET_KEY);
       console.log("Token verified.".green);
+      user = { ...user, moderator: true };
     } catch (tokenError) {
       console.error("Token verification failed:", tokenError);
       return res.status(401).json({ error: "Invalid token" });
@@ -102,7 +102,12 @@ router.post("/jtoken", (req, res) => {
   } else {
     // If no token is provided or token is null, proceed as a guest
     console.log("No token provided - Proceeding as guest.");
-    user = { username: "Guest", email: "", role: "participant" };
+    user = {
+      username: "Guest",
+      email: "",
+      role: "participant",
+      moderator: false,
+    };
   }
 
   const jitsiToken = generateJitsiToken(user);

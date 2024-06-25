@@ -13,7 +13,7 @@ import Nav from "../components/Nav";
 import ico from "../assets/mocrs.ico";
 import logo from "../assets/mocrs.gif";
 
-const interfaceConfig = {
+let interfaceConfig = {
   DEFAULT_LOGO_URL: logo,
   DEFAULT_WELCOME_PAGE_LOGO_URL: logo,
   JITSI_WATERMARK_LINK: "join.mocrs.com",
@@ -40,6 +40,7 @@ const LiveSpace = () => {
   const [room, setRoom] = useState(null);
   const [error, setError] = useState(null);
   const [token, setToken] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const jitsiApiRef = useRef(null);
 
   useEffect(() => {
@@ -54,8 +55,14 @@ const LiveSpace = () => {
           const data = { ...roomResponse.data, user: user };
           const tokenResponse = await createJitsiToken(data);
           setToken(tokenResponse.data.token);
+          console.log("////////////// User established: //////////////////");
           console.log(tokenResponse.data.token);
         } else {
+          // const data = { user: null };
+          // const guestResponseToken = await createJitsiToken(data);
+          // setToken(guestResponseToken.data.token);
+          // console.log("////////////// User established: //////////////////");
+          // console.log(guestResponseToken.data.token);
           setToken(null);
         }
       } catch (error) {
@@ -63,6 +70,8 @@ const LiveSpace = () => {
         setError(
           error.response?.data?.message || "An unexpected error occurred"
         );
+      } finally {
+        setIsLoading(false); // Update loading state
       }
     };
 
@@ -78,6 +87,10 @@ const LiveSpace = () => {
   const handleMeetingEnd = useCallback(() => {
     navigate("/spaces");
   }, [navigate]);
+
+  const handleClick = () => {
+    navigate("/login");
+  };
 
   const handleAPIReady = useCallback(
     (apiObj) => {
@@ -123,13 +136,39 @@ const LiveSpace = () => {
     );
   }
 
-  if (!room || !token) {
+  if (isLoading) {
     return (
       <div className="LiveSpace">
         <Nav />
         <div className="loading-container">
           <img src={logo} alt="MOCRS Logo" className="LiveSpace-loading" />
           <p className="loading">Loading space...</p>
+          <small className="loading-notify">
+            You might want to{" "}
+            <button onClick={handleClick} className="loading-login">
+              login/signup
+            </button>{" "}
+            to instantly access rooms.
+          </small>
+        </div>
+      </div>
+    );
+  }
+
+  if (!room || !token) {
+    return (
+      <div className="LiveSpace">
+        <Nav />
+        <div className="loading-container">
+          <img src={logo} alt="MOCRS Logo" className="LiveSpace-loading" />
+          <p className="loading">Join the conversation...</p>
+          <p className="loading-notify">
+            Please 👉🏼{" "}
+            <button onClick={handleClick} className="loading-login">
+              login/signup
+            </button>{" "}
+            to instally access rooms. 🎉
+          </p>
         </div>
       </div>
     );

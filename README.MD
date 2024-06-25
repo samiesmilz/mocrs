@@ -155,6 +155,10 @@ MOCRs are designed for lifelong learners and enthusiasts of all ages, including:
 
 ![Indexes table](images/index.png)
 
+### Relationship Model
+
+![Relationship](images/mocrs_model.png)
+
 ## 11. Setup Instructions
 
 ### 11.1 Prerequisites

@@ -34,9 +34,10 @@ function generateJitsiToken(user) {
         name: user.firstName || "Guest",
         email: user.email || "",
         affiliation: "member",
+        role: "participant",
       },
     },
-    moderator: false,
+    moderator: user.moderator || false,
     iat: now,
     exp: now + 24 * 3600, // Token expires in 24 hours
     nbf: now - 10, // Token is valid from 10 seconds ago
@@ -46,7 +47,7 @@ function generateJitsiToken(user) {
     const token = jwt.sign(jwt_payload, SECRET_KEY, { algorithm: "HS256" });
     return token;
   } catch (error) {
-    console.error("Error generating Jitsi token:", error);
+    console.error("Error generating Jitsi token:", error.message, error.stack);
     throw new Error("Failed to generate Jitsi token");
   }
 }

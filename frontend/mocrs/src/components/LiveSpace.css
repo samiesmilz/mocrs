@@ -45,6 +45,16 @@
   font-size: medium;
   font-weight: 300;
 }
+.loading-notify {
+  color: #fc02fb;
+  font-weight: 400;
+}
+.loading-login {
+  color: #fdecfd;
+  background-color: black;
+  margin: 2px;
+  border: 0.5px dotted white;
+}
 
 .error-container {
   display: flex;
