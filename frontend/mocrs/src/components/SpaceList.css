@@ -1,0 +1,79 @@
+.SpaceList {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  background-color: rgb(27, 26, 45);
+  min-width: 100%;
+  min-height: 100vh;
+}
+
+.SpacesList-spaces {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  justify-content: center;
+  max-width: 100vw;
+}
+
+.SpaceList-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 55px;
+  margin-bottom: 45px;
+  color: white;
+}
+
+.SpaceList-user-firstname {
+  color: #fc02fb;
+  font-weight: 600;
+}
+
+.Space-card {
+  margin: 5px;
+}
+
+.Space-card:hover {
+  transform: scale(1.02);
+  transition: transform 0.3s ease;
+}
+
+.notify-span {
+  color: #fc02fb;
+}
+
+.SpaceList-footer-notification {
+  font-size: small;
+  margin-top: 50px;
+  margin-bottom: 0px;
+  color: white;
+}
+
+.SpaceList-footer {
+  color: #fceaf6;
+  font-size: x-small;
+  padding: 5px 25px;
+  border-radius: 5px;
+  background-color: #fc02a4ad;
+}
+
+.Get-started {
+  background-color: #fc02a4ad;
+  color: white;
+  margin-left: 10px;
+  padding: 5px 25px;
+  border-radius: 20px;
+  font-size: medium;
+}
+
+.Get-started:hover {
+  box-shadow: 0 0 1px 1px #000000, 0 0 10px 10px #050005, 0 0 10px 10px #fc02fb;
+  cursor: pointer;
+  border: 1px dotted white;
+}
+
+@media (max-width: 768px) {
+  .SpacesList-spaces {
+    flex-direction: column;
+    align-items: center;
+  }
+}

@@ -1,0 +1,108 @@
+.Profile-Div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 100vw;
+  min-height: 100vh;
+}
+
+.Profile-wrapper-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 70px;
+  width: 100vw;
+  height: 80vh;
+}
+
+.Profile {
+  padding: 20px;
+  width: 400px;
+  border-radius: 10px;
+  margin: 20px auto;
+  box-shadow: 0 0 7px 5px #fc02fb, 0 0 10px 7px #fc02fb, 0 0 15px 10px #fc02fb;
+  cursor: pointer;
+}
+.Profile-welcome {
+  font-size: x-large;
+  color: #000000;
+}
+.Profile input:focus {
+  outline-color: #fc02fb;
+}
+
+.Profile-title {
+  text-align: center;
+  font-size: x-large;
+  font-weight: 450;
+  color: black;
+  padding: 0px 15px;
+}
+
+.title-span {
+  color: white;
+  font-weight: 500;
+  background-color: black;
+  border-radius: 10px;
+  padding: 0px 10px;
+}
+
+.Profile-heading {
+  margin-bottom: 20px;
+  font-size: medium;
+  font-weight: 450;
+  background-color: #ffe4f83c;
+  padding: 5px 0px;
+  color: #000000;
+}
+
+.Profile div {
+  margin-bottom: 0.5em;
+}
+
+.Profile label {
+  display: block;
+  margin-bottom: 0.5em;
+  font-size: small;
+  text-align: left;
+}
+
+.Profile input {
+  width: calc(100% - 35px);
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.Profile .error {
+  color: red;
+  font-size: 0.6em;
+  margin: 0px;
+  text-align: left;
+}
+
+.Profile-submit {
+  width: 100%;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 15px 20px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.Profile-unlock {
+  color: #fc02fb;
+  font-size: small;
+  margin: 5px 10px;
+  border: 0.2px dotted #fc02fb;
+  border-radius: 5px;
+}
+
+.Profile button:hover {
+  background: linear-gradient(45deg, black, #fc02fb);
+  color: white;
+}

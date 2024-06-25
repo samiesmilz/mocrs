@@ -1,0 +1,67 @@
+.Nav {
+  display: flex;
+  background-color: black;
+  height: 55px;
+  align-items: center;
+  font-size: small;
+}
+
+.Nav-logo {
+  height: 40px;
+  margin-top: 5px;
+  border: none;
+  border-right: 1px dotted #fbe2fb59;
+  /* border-radius: 10px;
+  box-shadow: 0 0 1px 1px #fc02fb, 0 0 2px 2px #fc02fb, 0 0 2px 2px #fc02fb;
+  cursor: pointer; */
+}
+
+.brand:hover {
+  background-color: black;
+  color: aquamarine;
+}
+
+.Nav-links {
+  display: inline;
+  margin-left: auto;
+  margin-right: 5px;
+}
+
+a {
+  margin: 0px 7px;
+}
+
+.Nav-create-space {
+  background-color: #fc02fb;
+  padding: 5px 7px;
+  font-size: smaller;
+  border: 1px dotted white;
+  border-radius: 10px;
+}
+.Nav-create-space:hover {
+  color: white;
+  box-shadow: 0 0 1px 1px #fc02fb, 0 0 2px 2px #fc02fb, 0 0 2px 2px #fc02fb;
+  cursor: pointer;
+}
+
+.Nav-profile-link {
+  background-color: black;
+  padding: 5px 10px;
+  border: 1px solid #fc02fb;
+  border-radius: 10px;
+}
+
+.Nav-profile-link:hover {
+  box-shadow: 0 0 1px 1px #fc02fb, 0 0 2px 2px #fc02fb, 0 0 2px 2px #fc02fb;
+  cursor: pointer;
+  border: 1px dotted white;
+}
+
+.Nav-logout {
+  font-size: small;
+  background-color: rgb(20, 20, 20);
+  padding: 5px 10px;
+  border: 1px dotted rgba(255, 255, 255, 0.83);
+  border-radius: 7px;
+  color: rgb(250, 250, 250);
+}

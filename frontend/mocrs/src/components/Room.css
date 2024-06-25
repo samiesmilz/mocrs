@@ -1,0 +1,28 @@
+.Room {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #e49fcc23;
+  width: 430px;
+  height: 350px;
+  border-radius: 8px;
+  padding: 10px;
+  color: dimgray;
+  font-size: smaller;
+  justify-content: center;
+}
+
+.Room:hover {
+  color: white;
+  box-shadow: 0 0 1px 1px #fc02fb, 0 0 2px 2px #fc02fb, 0 0 2px 2px #fc02fb;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.Space-title {
+  color: white;
+}
+.Join-space {
+  background-color: #fc02a4ad;
+  color: white;
+}

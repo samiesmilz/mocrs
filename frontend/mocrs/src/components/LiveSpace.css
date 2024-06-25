@@ -1,0 +1,70 @@
+.LiveSpace {
+  min-width: 100vw;
+  min-height: 100vh;
+  background-color: black;
+}
+
+.loading-spinner {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 95vh;
+  width: 100vw;
+}
+
+.LiveSpace-loading {
+  margin-top: 200px;
+  width: 450px;
+}
+
+.Pre-live-notify {
+  color: #fc02fb;
+  margin-top: 0px;
+  font-size: small;
+}
+
+.escape-hatch {
+  background-color: #fc02fb;
+  border: 1px solid black;
+  color: white;
+  padding: 7px 15px;
+  margin-left: 10px;
+}
+
+.escape-hatch:hover {
+  background-color: black;
+  color: white;
+  box-shadow: 0 0 1px 1px #fc02fb, 0 0 5px 5px #fc02fb, 0 0 5px 5px #fc02fb;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.loading {
+  color: #fdecfd;
+  font-size: medium;
+  font-weight: 300;
+}
+
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 93vh;
+  width: 100vw;
+}
+
+.error-message {
+  color: #fc02fb;
+  margin-top: 0px;
+  font-size: 150px;
+  font-size: large;
+}
+
+.error-desc {
+  color: white;
+}
+.error-logo {
+  width: 450px;
+}

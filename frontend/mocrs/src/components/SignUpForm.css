@@ -1,0 +1,155 @@
+.SignUpForm-Div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 100vw;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.SignUpForm-wrapper-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 100vw;
+  min-height: 90vh;
+  background-color: #f5f5f5;
+}
+
+.SignUpForm {
+  padding: 20px;
+  min-width: 400px;
+  border-radius: 10px;
+  box-shadow: 0 0 7px 5px #fc02fb, 0 0 10px 7px #fc02fb, 0 0 15px 10px #fc02fb;
+  background-color: white;
+}
+
+.SignUpForm input:focus {
+  outline-color: #fc02fb;
+}
+
+.SignUpForm-title {
+  text-align: center;
+  font-size: x-large;
+  font-weight: 450;
+  color: black;
+}
+
+.SignUpForm-heading {
+  font-size: larger;
+  font-weight: 450;
+  background-color: #ffe4f83c;
+  color: #000000;
+}
+
+.SignUpForm div {
+  margin-bottom: 0.5em;
+}
+
+.SignUpForm label {
+  display: block;
+  margin-bottom: 0.5em;
+  font-size: small;
+  text-align: left;
+  color: #000000;
+}
+
+.SignUpForm input {
+  width: calc(100% - 35px);
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.SignUpForm .error {
+  color: red;
+  font-size: 0.75rem;
+  margin: 0px;
+  text-align: left;
+}
+
+.SignUpForm-progress {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+  width: 400px;
+  background-color: #000000e7;
+}
+
+.SignUpForm-step {
+  width: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: small;
+  color: white;
+  border: 1px dotted rgba(0, 0, 0, 0.125);
+}
+
+.SignUpForm-step.active {
+  background-color: #fc02fcc9;
+  color: white;
+}
+
+.SignUpForm-next-button {
+  width: 100%;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 15px 20px;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-size: 1rem;
+}
+
+.SignUpForm-next-button:hover {
+  background: linear-gradient(45deg, black, #fc02fb);
+}
+
+.SignUpForm-back-button {
+  color: #fc02fb;
+  background-color: #ffe4f806;
+  font-size: smaller;
+  margin-right: 10px;
+  padding: 5px 10px;
+}
+
+.SignUpForm-back-button:hover {
+  color: #fc02fb;
+  border: 1px dotted #fc02fb;
+}
+
+.SignUpForm-signup-button {
+  width: 100%;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 15px 20px;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-size: 1rem;
+}
+
+.SignUpForm-signup-button:hover {
+  background: linear-gradient(45deg, black, #fc02fb);
+}
+
+.SignUpForm-register-link {
+  font-size: 0.875rem;
+  margin-top: 1em;
+  color: #333;
+}
+
+.SignUpForm-register-link a {
+  color: #fc02fb;
+  text-decoration: none;
+}
+
+.SignUpForm-register-link a:hover {
+  text-decoration: underline;
+  color: black;
+}

@@ -1,0 +1,26 @@
+.Home {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  place-items: center;
+  min-height: 100vh;
+  width: 100vw;
+}
+
+.header {
+  background: #282c34;
+  color: white;
+  padding: 40px;
+}
+
+.main {
+  margin: 20px;
+}
+
+.rooms {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* spinners */
