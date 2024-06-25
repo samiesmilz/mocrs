@@ -26,6 +26,8 @@ MOCRs are designed for lifelong learners and enthusiasts of all ages, including:
 
 ## 3. Features and Functionality
 
+![Home](images/home.png)
+
 ### 3.1 Massive Open Curiosity Rooms (MOCRs)
 
 - **Real-time Discussions**: Users can engage in live discussions on various topics with other participants and AI avatars.
@@ -78,7 +80,7 @@ MOCRs are designed for lifelong learners and enthusiasts of all ages, including:
 - Ensure the backend server is running:
   ```bash
   cd backend
-  npm start
+  node server.js
   ```
 - Ensure the frontend server is running:
   ```bash
@@ -147,11 +149,11 @@ MOCRs are designed for lifelong learners and enthusiasts of all ages, including:
 
 **Table Name:** rooms
 
-![Users table](images/rooms.png)
+![Rooms table](images/rooms.png)
 
 ### Indexes
 
-![Users table](images/index.png)
+![Indexes table](images/index.png)
 
 ## 11. Setup Instructions
 
@@ -222,6 +224,10 @@ cd mocrs
    npm run dev
    ```
 
+## Home
+
+![Space](images/space.png)
+
 ## 11. Why This Project
 
 MOCRs was created to address the need for more interactive, engaging, and collaborative online learning environments. By integrating real-time discussions, AI assistance, and gamified elements, MOCRs aims to make learning more dynamic and enjoyable, fostering a community of curious minds eager to explore and learn together.
@@ -232,3 +238,5 @@ For support or contributions, please contact:
 
 - **Email**: samie@mocrs.com
 - **GitHub**: [MOCRs Repository](https://github.com/samiesmilz/mocrs)
+
+![Footer](images/footer.png)
