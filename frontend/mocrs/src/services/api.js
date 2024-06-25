@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5001/api";
+const API_URL = import.meta.env.API_URL || "http://localhost:5001/api";
 
 // Create an axios instance with default configurations
 const apiClient = axios.create({
