@@ -53,7 +53,9 @@
   color: #fdecfd;
   background-color: black;
   margin: 2px;
-  border: 0.5px dotted white;
+  border: 1px dotted white;
+  border-radius: 10px;
+  padding: 3px 5px;
 }
 
 .error-container {

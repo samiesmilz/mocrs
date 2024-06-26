@@ -55,14 +55,8 @@ const LiveSpace = () => {
           const data = { ...roomResponse.data, user: user };
           const tokenResponse = await createJitsiToken(data);
           setToken(tokenResponse.data.token);
-          console.log("////////////// User established: //////////////////");
-          console.log(tokenResponse.data.token);
+          console.log("User established:");
         } else {
-          // const data = { user: null };
-          // const guestResponseToken = await createJitsiToken(data);
-          // setToken(guestResponseToken.data.token);
-          // console.log("////////////// User established: //////////////////");
-          // console.log(guestResponseToken.data.token);
           setToken(null);
         }
       } catch (error) {
@@ -71,7 +65,7 @@ const LiveSpace = () => {
           error.response?.data?.message || "An unexpected error occurred"
         );
       } finally {
-        setIsLoading(false); // Update loading state
+        setIsLoading(false);
       }
     };
 

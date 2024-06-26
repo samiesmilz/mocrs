@@ -6,8 +6,8 @@
   width: 430px;
   height: 350px;
   border-radius: 8px;
-  padding: 10px;
-  color: dimgray;
+  padding: 10px 20px;
+  color: rgb(103, 101, 103);
   font-size: smaller;
   justify-content: center;
 }
