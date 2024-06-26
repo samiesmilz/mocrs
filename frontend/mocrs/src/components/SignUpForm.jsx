@@ -65,7 +65,6 @@ const SignUpForm = () => {
 
           if (newUser && token) {
             console.log(`Current user: ${newUser.username}`);
-            console.log(`Token: ${token}`);
             // Set user and token in context and local storage
             setUserInContext({ ...newUser, token: token });
             setMocrsLocalUser({ ...newUser, token: token });

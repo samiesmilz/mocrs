@@ -1,49 +1,46 @@
 import { useState, useContext, useEffect } from "react";
 import "./Profile.css";
-import { useNavigate } from "react-router-dom";
 import { updateUser } from "../services/api";
 import AuthContext from "./AuthContext";
 import Nav from "../components/Nav";
 
 const Profile = () => {
-  const { setUserInContext, mocrsLocalUser, setMocrsLocalUser } =
-    useContext(AuthContext);
+  const {
+    user,
+    setUserInContext,
+    mocrsLocalUser,
+    setMocrsLocalUser,
+    setMocrsAuthToken,
+  } = useContext(AuthContext);
   const [locked, setLocked] = useState(true);
-  const navigate = useNavigate();
-
-  // Handling form data
   const [formData, setFormData] = useState({
     username: "",
     password: "",
     firstName: "",
     lastName: "",
-    confirmPassword: "",
     email: "",
   });
-
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         if (mocrsLocalUser && mocrsLocalUser.username) {
-          console.log(`Mocrs profile for: ${mocrsLocalUser.username}`);
+          const { username, firstName, lastName, email } = mocrsLocalUser;
           setFormData({
-            username: mocrsLocalUser.username,
-            firstName: mocrsLocalUser.firstName,
-            lastName: mocrsLocalUser.lastName,
-            email: mocrsLocalUser.email,
+            username,
+            firstName,
+            lastName,
+            email,
             password: "",
             confirmPassword: "",
           });
           setLocked(true);
-          return;
         }
       } catch (error) {
         console.error("Error fetching profile data:", error);
       }
     };
-    // Fetch user data
     fetchUserData();
   }, [mocrsLocalUser]);
 
@@ -54,7 +51,7 @@ const Profile = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((data) => ({ ...data, [name]: value }));
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const validate = () => {
@@ -63,7 +60,7 @@ const Profile = () => {
     if (!formData.email) newErrors.email = "Email is required.";
     if (!formData.firstName) newErrors.firstName = "First Name is required.";
     if (!formData.lastName) newErrors.lastName = "Last Name is required.";
-    if (!formData.password) newErrors.password = "Invalid password.";
+    if (!formData.password) newErrors.password = "Password is required.";
     return newErrors;
   };
 
@@ -71,25 +68,20 @@ const Profile = () => {
     e.preventDefault();
     const newErrors = validate();
     if (Object.keys(newErrors).length === 0) {
-      console.log("Form submitted successfully");
       try {
+        setMocrsAuthToken(user.token);
         const userData = { ...formData };
         delete userData.username;
         delete userData.confirmPassword;
-
-        // Check data
-        console.log(formData.username);
-        console.log(userData);
-
-        const updatedUser = await updateUser(formData.username, userData);
-        console.log(updatedUser);
+        // Send form data to server
+        const updatedUser = await updateUser(mocrsLocalUser.username, userData);
         setUserInContext(updatedUser);
         setMocrsLocalUser(updatedUser);
-        setLocked(true); // Lock the form again after successful update
+        setLocked(true);
         console.log("Profile updated successfully.");
-        navigate("/profile");
       } catch (error) {
         console.error("Error updating profile:", error);
+        // Handle error state or display error message to user
       }
     } else {
       setErrors(newErrors);
@@ -111,13 +103,14 @@ const Profile = () => {
               </button>
             </h5>
           </div>
+
           <div>
             <label htmlFor="username">Username</label>
             <input
               type="text"
               id="username"
               name="username"
-              placeholder="username"
+              placeholder="Username"
               autoComplete="username"
               value={formData.username}
               onChange={handleChange}
@@ -148,7 +141,7 @@ const Profile = () => {
               id="firstName"
               name="firstName"
               placeholder="First name"
-              autoComplete="firstname"
+              autoComplete="given-name"
               value={formData.firstName}
               onChange={handleChange}
               disabled={locked}
@@ -163,7 +156,7 @@ const Profile = () => {
               id="lastName"
               name="lastName"
               placeholder="Last name"
-              autoComplete="lastname"
+              autoComplete="family-name"
               value={formData.lastName}
               onChange={handleChange}
               disabled={locked}
@@ -177,7 +170,7 @@ const Profile = () => {
               type="password"
               id="password"
               name="password"
-              placeholder="password"
+              placeholder="Password"
               autoComplete="new-password"
               value={formData.password}
               onChange={handleChange}

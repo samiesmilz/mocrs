@@ -6,7 +6,6 @@ import AllRoutes from "./AllRoutes";
 import AuthContext from "./components/AuthContext";
 import useLocalStorage from "./hooks/useLocalStorage";
 
-
 function App() {
   const [user, setUserInContext] = useState(null);
   const [mocrsAuthToken, setMocrsAuthToken] = useLocalStorage(

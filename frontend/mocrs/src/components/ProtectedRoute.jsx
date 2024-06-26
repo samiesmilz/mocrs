@@ -7,15 +7,17 @@ import Nav from "./Nav";
 import logo from "../assets/mocrs.gif";
 
 const ProtectedRoute = ({ children }) => {
-  const { user } = useContext(AuthContext);
+  const { user, mocrsLocalUser } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setIsAuthenticated(!!user);
+    if (user || mocrsLocalUser) {
+      setIsAuthenticated(true);
+    }
     setIsLoading(false); // Mark loading as false once authentication status is determined
-  }, [user]);
+  }, [user, mocrsLocalUser]);
 
   if (isLoading) {
     return (

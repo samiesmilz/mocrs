@@ -53,9 +53,13 @@
   color: #fdecfd;
   background-color: black;
   margin: 2px;
-  border: 1px dotted white;
+  border: 0.7px dotted #fc02fb;
   border-radius: 10px;
-  padding: 3px 5px;
+  padding: 3px 10px;
+  font-size: small;
+}
+.loading-login:hover {
+  box-shadow: 0 0 1px 1px #fc02fb, 0 0 5px 5px #fc02fb, 0 0 5px 5px #fc02fb;
 }
 
 .error-container {

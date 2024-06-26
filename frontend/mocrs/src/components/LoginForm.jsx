@@ -7,8 +7,7 @@ import Nav from "../components/Nav";
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  const { setUserInContext, setMocrsLocalUser, setMocrsAuthToken } =
-    useContext(AuthContext);
+  const { setUserInContext, setMocrsLocalUser } = useContext(AuthContext);
   const initialData = {
     username: "",
     password: "",
@@ -42,7 +41,7 @@ const LoginForm = () => {
           user = { ...user, token: token };
           setUserInContext(user);
           setMocrsLocalUser(user);
-          setMocrsAuthToken(user.token);
+          localStorage.setItem("mocrsAuthToken", token);
 
           // Navigate to the desired page
           navigate("/spaces");
