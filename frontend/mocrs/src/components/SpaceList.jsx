@@ -55,7 +55,6 @@ const SpaceList = () => {
           ))
         ) : (
           <div className="SpaceList-loading">
-            <Nav />
             <div className="loading-container">
               <img src={logo} alt="MOCRS Logo" className="LiveSpace-loading" />
               <p className="loading">Loading space...</p>
