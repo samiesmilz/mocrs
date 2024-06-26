@@ -3,7 +3,7 @@
 /backend/node_modules/
 
 # Ignore .env files
-/frontend/.env
+/frontend/mocrs/.env
 /backend/.env
 
 /backend/*.log

@@ -1,5 +1,6 @@
 {
   "name": "mocrs",
+  "private": true,
   "version": "1.0.0",
   "description": "A video conferencing platform offering massive or micro, open curiosity rooms and spaces",
   "main": "server.js",
