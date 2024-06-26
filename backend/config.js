@@ -13,9 +13,11 @@ const SECRET_KEY = process.env.SECRET_KEY;
 const JITSI_DOMAIN = process.env.JITSI_DOMAIN;
 const JITSI_APP_ID = process.env.JITSI_APP_ID;
 const APP_DOMAIN = process.env.APP_DOMAIN;
-
-// Define PORT by converting the environment variable to a number
-const PORT = Number(process.env.PORT || 3001);
+const FRONTEND_URL = process.env.FRONTEND;
+const LIVE_URL = process.env.LIVE_URL;
+const DATABASE_URL = process.env.DATABASE_URL;
+const NODE_ENV = process.env.NODE_ENV;
+const PORT = Number(process.env.PORT);
 
 // Function to determine database URI based on environment
 const getDatabaseUri = () =>
@@ -41,5 +43,11 @@ export {
   JITSI_DOMAIN,
   JITSI_APP_ID,
   APP_DOMAIN,
+  FRONTEND_URL,
+  LIVE_URL,
+  DATABASE_URL,
+  NODE_ENV,
+  SECRET_KEY,
+  PORT,
   getDatabaseUri,
 };
