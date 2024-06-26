@@ -143,13 +143,7 @@ const LiveSpace = () => {
         <div className="loading-container">
           <img src={logo} alt="MOCRS Logo" className="LiveSpace-loading" />
           <p className="loading">Loading space...</p>
-          <small className="loading-notify">
-            You might want to{" "}
-            <button onClick={handleClick} className="loading-login">
-              login/signup
-            </button>{" "}
-            to instantly access rooms.
-          </small>
+          <small className="loading-notify">Just a moment...</small>
         </div>
       </div>
     );

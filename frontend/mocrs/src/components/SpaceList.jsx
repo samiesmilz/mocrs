@@ -4,6 +4,7 @@ import { getAllRooms } from "../services/api";
 import Space from "../components/Space";
 import Nav from "../components/Nav";
 import AuthContext from "./AuthContext";
+import logo from "../assets/mocrs.gif";
 import "./SpaceList.css";
 
 const SpaceList = () => {
@@ -53,9 +54,14 @@ const SpaceList = () => {
             </Link>
           ))
         ) : (
-          <p className="SpaceList-empty">
-            There are no live spaces at the moment.
-          </p>
+          <div className="SpaceList-loading">
+            <Nav />
+            <div className="loading-container">
+              <img src={logo} alt="MOCRS Logo" className="LiveSpace-loading" />
+              <p className="loading">Loading space...</p>
+              <small className="loading-notify">Just a moment...</small>
+            </div>
+          </div>
         )}
       </div>
       <p className="SpaceList-footer-notification">

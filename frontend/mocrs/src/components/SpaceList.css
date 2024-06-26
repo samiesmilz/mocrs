@@ -26,6 +26,7 @@
 .SpaceList-user-firstname {
   color: #fc02fb;
   font-weight: 600;
+  font-size: large;
 }
 
 .Space-card {
@@ -35,6 +36,10 @@
 .Space-card:hover {
   transform: scale(1.02);
   transition: transform 0.3s ease;
+}
+
+.SpaceList-loading {
+  margin-top: 100px;
 }
 
 .notify-span {
