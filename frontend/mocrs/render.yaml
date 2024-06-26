@@ -1,5 +1,10 @@
 services:
-  - name: frontend
-    env: node
-    buildCommand: npm install && npm run build
-    startCommand: npm run dev
+  - name: mocrs
+    type: static_site
+    env: static
+    buildCommand: npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /<*>
+        destination: /index.html

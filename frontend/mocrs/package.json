@@ -1,7 +1,7 @@
 {
   "name": "mocrs",
   "version": "0.0.0",
-  "homepage": "https://github.com/samiesmilz/mocrs",
+  "homepage": "https://github.com/samiesmilz/mocrs/frontend/mocrs",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -15,7 +15,6 @@
   "dependencies": {
     "@jitsi/react-sdk": "^1.4.0",
     "axios": "^1.7.2",
-    "gh-pages": "^6.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.1"
@@ -28,6 +27,7 @@
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
+    "gh-pages": "^6.1.1",
     "vite": "^5.2.0"
   }
 }

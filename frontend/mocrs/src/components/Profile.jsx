@@ -1,5 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import "./Profile.css";
+import { useNavigate } from "react-router-dom";
 import { updateUser } from "../services/api";
 import AuthContext from "./AuthContext";
 import Nav from "../components/Nav";
@@ -8,6 +9,7 @@ const Profile = () => {
   const { setUserInContext, mocrsLocalUser, setMocrsLocalUser } =
     useContext(AuthContext);
   const [locked, setLocked] = useState(true);
+  const navigate = useNavigate();
 
   // Handling form data
   const [formData, setFormData] = useState({
@@ -85,6 +87,7 @@ const Profile = () => {
         setMocrsLocalUser(updatedUser);
         setLocked(true); // Lock the form again after successful update
         console.log("Profile updated successfully.");
+        navigate("/profile");
       } catch (error) {
         console.error("Error updating profile:", error);
       }

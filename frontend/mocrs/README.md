@@ -2,7 +2,7 @@
 
 ## 1. Introduction
 
-![Welcome](images/welcome.png)
+![Welcome](../../images/welcome.png)
 
 ### 1.1 Project Overview
 
@@ -26,7 +26,7 @@ MOCRs are designed for lifelong learners and enthusiasts of all ages, including:
 
 ## 3. Features and Functionality
 
-![Home](images/home.png)
+![Home](../../images/home.png)
 
 ### 3.1 Massive Open Curiosity Rooms (MOCRs)
 
@@ -143,21 +143,21 @@ MOCRs are designed for lifelong learners and enthusiasts of all ages, including:
 
 **Table Name:** users
 
-![Users table](images/users.png)
+![Users table](../../images/users.png)
 
 ### Rooms Table
 
 **Table Name:** rooms
 
-![Rooms table](images/rooms.png)
+![Rooms table](../../images/rooms.png)
 
 ### Indexes
 
-![Indexes table](images/index.png)
+![Indexes table](../../images/index.png)
 
 ### Relationship Model
 
-![Relationship](images/mocrs_model.png)
+![Relationship](../../images/mocrs_model.png)
 
 ## 11. Setup Instructions
 
@@ -230,7 +230,7 @@ cd mocrs
 
 ## Home
 
-![Space](images/space.png)
+![Space](../../images/space.png)
 
 ## 11. Why This Project
 
@@ -243,4 +243,4 @@ For support or contributions, please contact:
 - **Email**: samie@mocrs.com
 - **GitHub**: [MOCRs Repository](https://github.com/samiesmilz/mocrs)
 
-![Footer](images/footer.png)
+![Footer](../../images/footer.png)
