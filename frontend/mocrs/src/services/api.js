@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const LIVE_URL = import.meta.env.LIVE_URL;
-const API_URL = import.meta.env.API_URL || LIVE_URL;
+// const LIVE_URL = import.meta.env.LIVE_URL;
+const API_URL = "https://mocrs-backend.onrender.com";
 
 // Create an axios instance with default configurations
 const apiClient = axios.create({
