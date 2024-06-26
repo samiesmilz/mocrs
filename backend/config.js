@@ -47,6 +47,5 @@ export {
   LIVE_URL,
   DATABASE_URL,
   NODE_ENV,
-  SECRET_KEY,
   getDatabaseUri,
 };

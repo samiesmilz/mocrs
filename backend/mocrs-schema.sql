@@ -1,5 +1,3 @@
-
-
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
@@ -21,7 +19,7 @@ CREATE TABLE rooms (
   uuid UUID DEFAULT uuid_generate_v4() NOT NULL UNIQUE,
   name VARCHAR(255) NOT NULL,
   description TEXT CHECK (LENGTH(description) <= 250),
-  room_type VARCHAR(20) CHECK (room_type IN ('meeting', 'study', 'focus', 'chat')),
+  room_type VARCHAR(20) CHECK (room_type IN ('meeting', 'study', 'stream', 'focus', 'chat', 'social')),
   is_private BOOLEAN DEFAULT FALSE,
   creator_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
