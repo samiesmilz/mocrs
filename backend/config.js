@@ -29,12 +29,14 @@ const getDatabaseUri = () =>
 const BCRYPT_WORK_FACTOR = process.env.NODE_ENV === "test" ? 1 : 12;
 
 // Log configuration details with colorful output
-console.log("Mocrs Config:".green);
-console.log("PORT:".yellow, PORT);
-console.log("BCRYPT_WORK_FACTOR".yellow, BCRYPT_WORK_FACTOR);
-console.log("Database:".yellow, getDatabaseUri());
-console.log("---");
-
+const isDevelopment = process.env.NODE_ENV === "development";
+if (isDevelopment) {
+  console.log("Mocrs Config:".green);
+  console.log("PORT:".yellow, PORT);
+  console.log("BCRYPT_WORK_FACTOR:".yellow, BCRYPT_WORK_FACTOR);
+  console.log("Database:".yellow, getDatabaseUri());
+  console.log("---");
+}
 // Export configuration as an object using object shorthand syntax
 export {
   SECRET_KEY,
