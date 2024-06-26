@@ -7,6 +7,12 @@
   min-height: 100vh;
 }
 
+.SpaceList-loading {
+  min-width: 100vw;
+  min-height: 100vh;
+  background-color: black;
+}
+
 .SpacesList-spaces {
   display: flex;
   flex-wrap: wrap;

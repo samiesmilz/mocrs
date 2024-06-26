@@ -11,6 +11,7 @@ const SpaceList = () => {
   const [rooms, setRooms] = useState([]);
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchRooms = async () => {
@@ -19,6 +20,8 @@ const SpaceList = () => {
         setRooms(response.data || []); // Ensure response.data is set or default to empty array
       } catch (error) {
         console.error("Error fetching rooms:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchRooms();
@@ -27,6 +30,19 @@ const SpaceList = () => {
   const handleGetStarted = () => {
     navigate("/signup");
   };
+
+  if (isLoading) {
+    return (
+      <div className="SpaceList-loading">
+        <Nav />
+        <div className="loading-container">
+          <img src={logo} alt="MOCRS Logo" className="LiveSpace-loading" />
+          <p className="loading">Loading space...</p>
+          <small className="loading-notify">Just a moment...</small>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="SpaceList">
@@ -43,25 +59,15 @@ const SpaceList = () => {
         )}
       </h2>
       <div className="SpacesList-spaces">
-        {rooms.length ? (
-          rooms.map((space) => (
-            <Link
-              to={`/spaces/${space.uuid}`}
-              key={space.id}
-              className="Space-card"
-            >
-              <Space room={space} />
-            </Link>
-          ))
-        ) : (
-          <div className="SpaceList-loading">
-            <div className="loading-container">
-              <img src={logo} alt="MOCRS Logo" className="LiveSpace-loading" />
-              <p className="loading">Loading space...</p>
-              <small className="loading-notify">Just a moment...</small>
-            </div>
-          </div>
-        )}
+        {rooms.map((space) => (
+          <Link
+            to={`/spaces/${space.uuid}`}
+            key={space.id}
+            className="Space-card"
+          >
+            <Space room={space} />
+          </Link>
+        ))}
       </div>
       <p className="SpaceList-footer-notification">
         There {rooms.length === 1 ? "is" : "are"}{" "}
