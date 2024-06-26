@@ -48,6 +48,5 @@ export {
   DATABASE_URL,
   NODE_ENV,
   SECRET_KEY,
-  PORT,
   getDatabaseUri,
 };
