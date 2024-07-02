@@ -84,6 +84,10 @@
   font-weight: 300;
 }
 
+.escape-hatch {
+  background-color: #000000;
+  color: white;
+}
 @media (max-width: 768px) {
   .SpacesList-spaces {
     flex-direction: column;
