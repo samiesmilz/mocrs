@@ -19,7 +19,7 @@
 .Profile {
   padding: 20px;
   width: 100%;
-  max-width: 400px;
+  max-width: 350px;
   min-width: 300px;
   border-radius: 10px;
   margin: 20px 15px;
@@ -149,7 +149,7 @@
 }
 
 .Profile-logo-guest {
-  width: 400px;
+  width: 325px;
 }
 
 .Profile-delete-warning {

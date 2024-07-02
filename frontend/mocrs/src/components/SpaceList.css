@@ -78,6 +78,12 @@
   border: 1px dotted white;
 }
 
+.error-message {
+  color: #fdecfd;
+  font-size: medium;
+  font-weight: 300;
+}
+
 @media (max-width: 768px) {
   .SpacesList-spaces {
     flex-direction: column;
