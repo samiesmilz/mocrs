@@ -129,9 +129,8 @@ const Profile = () => {
         <Nav />
         <div className="Profile-wrapper-div">
           <div className="Profile">
-            <h3 className="Profile-guest-message">
-              <span className="Profile-hi-guest">Hi there,</span> this could be
-              your profile. 🐶
+            <h3 className="Profile-heading">
+              Hi there, this could be your profile. 🐶
             </h3>
             <img src={logo} alt="MOCRS Logo" className="Profile-logo-guest" />
             <button
@@ -246,7 +245,7 @@ const Profile = () => {
             {isSubmitting ? "Updating..." : "Update Profile"}
           </button>
         </form>
-        <small className="profile-delete-warning">
+        <small className="Profile-delete-warning">
           This action cannot be undone.
         </small>
         <button

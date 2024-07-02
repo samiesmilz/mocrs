@@ -3,7 +3,7 @@
 
 // Import dotenv and colors packages using modern syntax
 import dotenv from "dotenv";
-import colors from "colors";
+import "colors";
 
 // Load environment variables from .env file into process.env
 dotenv.config();

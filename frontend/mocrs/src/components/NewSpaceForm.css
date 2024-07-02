@@ -1,7 +1,6 @@
 .NewSpace-Div {
   display: flex;
   flex-direction: column;
-  background-color: white;
   min-width: 100vw;
   min-height: 100vh;
 }
@@ -20,7 +19,6 @@ select:focus {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-color: white;
   min-width: 100vw;
   min-height: 90vh;
 }
