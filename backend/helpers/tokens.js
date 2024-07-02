@@ -10,8 +10,6 @@ function createToken(user) {
   };
   try {
     const token = jwt.sign(payload, SECRET_KEY, { algorithm: "HS256" });
-    console.log(`Token created: ${token}`.green);
-    console.log(`Token assigned to: ${user.username}`.green);
     return token;
   } catch (error) {
     console.error("Error creating token:", error.message);

@@ -253,7 +253,7 @@ const Profile = () => {
           onClick={handleDelete}
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Deleting..." : "Delete your account 😬⛔️🚮"}
+          {isSubmitting ? "Processing..." : "Delete your account 😬⛔️🚮"}
         </button>
       </div>
     </div>
