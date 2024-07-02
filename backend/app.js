@@ -1,5 +1,3 @@
-"use strict";
-/** Express app for mocrs. */
 import express from "express";
 import cors from "cors";
 import { LIVE_URL } from "./config.js";
@@ -9,7 +7,6 @@ import { FRONTEND_URL } from "./config.js";
 import authRoutes from "./routes/auth.js";
 import usersRoutes from "./routes/users.js";
 import roomRoutes from "./routes/rooms.js";
-import { authenticateJWT } from "./middleware/auth.js";
 import { NotFoundError } from "./middleware/expressError.js";
 import { rateLimiter } from "./middleware/rateLimiter.js";
 import morgan from "morgan";
@@ -20,19 +17,19 @@ const app = express();
 // Middleware
 app.use(
   cors({
-    origin: FRONTEND_URL || LIVE_URL,
+    origin: [FRONTEND_URL, LIVE_URL],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
 app.use(express.json());
 app.use(morgan("tiny"));
-app.use(authenticateJWT);
 app.use(rateLimiter);
 
 // Root route
 app.get("/", (req, res) => {
-  res.send("Welcome to the MOCRS API");
+  res.send("Welcome to the Mocrs API!");
 });
 
 // Routes to handle requests
@@ -47,7 +44,6 @@ app.use(function (req, res, next) {
 
 /** Generic error handler; anything unhandled goes here. */
 app.use(function (err, req, res, next) {
-  if (process.env.NODE_ENV !== "test") console.error(err.stack);
   const status = err.status || 500;
   const message = err.message;
   return res.status(status).json({

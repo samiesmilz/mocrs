@@ -1,13 +1,13 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import "./LoginForm.css";
 import { loginUser } from "../services/api";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "./AuthContext";
+import { useAuth } from "./useAuth";
 import Nav from "../components/Nav";
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  const { setUserInContext, setMocrsLocalUser } = useContext(AuthContext);
+  const { login } = useAuth();
   const initialData = {
     username: "",
     password: "",
@@ -27,6 +27,7 @@ const LoginForm = () => {
     return newErrors;
   };
 
+  // handle submit in login form
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = validate();
@@ -39,11 +40,8 @@ const LoginForm = () => {
           console.log(`Current user: ${user.username}`);
           // Set user and token in context and local storage
           user = { ...user, token: token };
-          setUserInContext(user);
-          setMocrsLocalUser(user);
-          localStorage.setItem("mocrsAuthToken", token);
-
-          // Navigate to the desired page
+          login(user, token);
+          // navigate to the desired page
           navigate("/spaces");
         }
 
@@ -96,7 +94,7 @@ const LoginForm = () => {
               id="password"
               name="password"
               placeholder="Password"
-              autoComplete="current-password"
+              autoComplete="new-password"
               value={formData.password}
               onChange={handleChange}
               required

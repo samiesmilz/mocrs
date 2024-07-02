@@ -1,7 +1,6 @@
 import axios from "axios";
 
-// const LIVE_URL = import.meta.env.LIVE_URL;
-const API_URL = "https://mocrs-backend.onrender.com/api";
+const API_URL = import.meta.env.VITE_API_URL;
 
 // Create an axios instance with default configurations
 const apiClient = axios.create({
@@ -15,8 +14,11 @@ const apiClient = axios.create({
 apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("mocrsAuthToken");
-    if (token !== null && token !== undefined) {
+    if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      console.log("Request sent with tk:");
+    } else {
+      console.log("No token sent.");
     }
     return config;
   },
@@ -24,18 +26,17 @@ apiClient.interceptors.request.use(
 );
 
 // Add a response interceptor for handling token expiration
-apiClient.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    const originalRequest = error.config;
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      localStorage.removeItem("mocrsAuthToken");
-      window.location.href = "/login";
-    }
-    return Promise.reject(error);
-  }
-);
+// apiClient.interceptors.response.use(
+//   (response) => response,
+//   (error) => {
+//     const originalRequest = error.config;
+//     if (error.response?.status === 401 && !originalRequest._retry) {
+//       originalRequest._retry = true;
+//       window.location.href = "/login";
+//     }
+//     return Promise.reject(error);
+//   }
+// );
 
 // Room routes
 export const getAllRooms = () => apiClient.get("/rooms");
@@ -45,10 +46,13 @@ export const joinRoom = (id) => apiClient.post(`/rooms/${id}/join`);
 export const leaveRoom = (id) => apiClient.post(`/rooms/${id}/leave`);
 export const getPublicRooms = () => apiClient.get("/rooms/public");
 export const getPrivateRooms = () => apiClient.get("/rooms/private");
+export const getUserRooms = (id) => apiClient.get(`/rooms/user/${id}`);
 
 // User routes
 export const loginUser = (data) => apiClient.post("/auth/login", data);
+export const getToken = (data) => apiClient.post("/auth/token", data);
 export const registerUser = (data) => apiClient.post("/auth/register", data);
+export const deleteUser = (username) => apiClient.delete(`/users/${username}`);
 export const getUserByUsername = (username) =>
   apiClient.get(`/users/${username}`);
 export const updateUser = (username, data) =>

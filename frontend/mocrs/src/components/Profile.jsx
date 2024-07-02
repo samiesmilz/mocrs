@@ -1,48 +1,39 @@
-import { useState, useContext, useEffect } from "react";
+// Profile
+import { useState, useEffect } from "react";
 import "./Profile.css";
-import { updateUser } from "../services/api";
-import AuthContext from "./AuthContext";
-import Nav from "../components/Nav";
+import { updateUser, deleteUser } from "../services/api";
+import { useAuth } from "./useAuth";
+import Nav from "./Nav";
+import { useNavigate } from "react-router-dom";
+import logo from "../assets/mocrs.gif";
 
 const Profile = () => {
-  const {
-    user,
-    setUserInContext,
-    mocrsLocalUser,
-    setMocrsLocalUser,
-    setMocrsAuthToken,
-  } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const { mocrsUser, login, logout, isLoading, token } = useAuth();
   const [locked, setLocked] = useState(true);
-  const [formData, setFormData] = useState({
+  const initialData = {
     username: "",
-    password: "",
+    email: "",
     firstName: "",
     lastName: "",
-    email: "",
-  });
+    password: "",
+  };
+  const [formData, setFormData] = useState(initialData);
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        if (mocrsLocalUser && mocrsLocalUser.username) {
-          const { username, firstName, lastName, email } = mocrsLocalUser;
-          setFormData({
-            username,
-            firstName,
-            lastName,
-            email,
-            password: "",
-            confirmPassword: "",
-          });
-          setLocked(true);
-        }
-      } catch (error) {
-        console.error("Error fetching profile data:", error);
-      }
-    };
-    fetchUserData();
-  }, [mocrsLocalUser]);
+    if (!isLoading && mocrsUser) {
+      // If mocrsUser has a user key, use it, otherwise use mocrsUser directly
+      const userData = mocrsUser.user
+        ? { ...mocrsUser.user, token: mocrsUser.token }
+        : mocrsUser;
+
+      setFormData({ ...userData, password: "" });
+      setErrors({});
+      setLocked(true);
+    }
+  }, [isLoading, mocrsUser]);
 
   const unLock = (e) => {
     e.preventDefault();
@@ -52,53 +43,125 @@ const Profile = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: "", submit: "" }));
   };
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.username) newErrors.username = "Username is required.";
     if (!formData.email) newErrors.email = "Email is required.";
     if (!formData.firstName) newErrors.firstName = "First Name is required.";
     if (!formData.lastName) newErrors.lastName = "Last Name is required.";
     if (!formData.password) newErrors.password = "Password is required.";
+    if (formData.password && formData.password.length < 3) {
+      newErrors.password = "Password must be at least 3 characters long.";
+    }
     return newErrors;
   };
 
+  // handle submit in profile to update user
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = validate();
     if (Object.keys(newErrors).length === 0) {
+      setIsSubmitting(true);
       try {
-        setMocrsAuthToken(user.token);
-        const userData = { ...formData };
-        delete userData.username;
-        delete userData.confirmPassword;
-        // Send form data to server
-        const updatedUser = await updateUser(mocrsLocalUser.username, userData);
-        setUserInContext(updatedUser);
-        setMocrsLocalUser(updatedUser);
+        const userData = {
+          email: formData.email,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          password: formData.password,
+        };
+        const response = await updateUser(formData.username, userData);
+        let updatedUser = response.data;
+
+        // Ensure the token is included in the user object and the structure is consistent
+        if (updatedUser.user) {
+          updatedUser = { ...updatedUser.user, token: updatedUser.token };
+        } else {
+          updatedUser = { ...updatedUser, token };
+        }
+
+        login(updatedUser, token);
+
         setLocked(true);
         console.log("Profile updated successfully.");
       } catch (error) {
-        console.error("Error updating profile:", error);
-        // Handle error state or display error message to user
+        setErrors({ submit: "Failed to update profile. Please try again." });
+      } finally {
+        setIsSubmitting(false);
       }
     } else {
       setErrors(newErrors);
     }
   };
 
+  const handleDelete = async () => {
+    setIsSubmitting(true);
+    try {
+      await deleteUser(formData?.username);
+      logout();
+      console.log("Profile deleted successfully.");
+      navigate("/signup");
+    } catch (error) {
+      console.error("Error deleting profile:", error);
+      setErrors({ submit: "Failed to delete account. Please try again." });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="LiveSpace">
+        <Nav />
+        <div className="loading-container">
+          <img src={logo} alt="MOCRS Logo" className="LiveSpace-loading" />
+          <p className="loading">Loading space...</p>
+          <small className="loading-notify">Just a moment...</small>
+        </div>
+      </div>
+    );
+  }
+
+  if (!mocrsUser) {
+    return (
+      <div className="Profile-Div">
+        <Nav />
+        <div className="Profile-wrapper-div">
+          <div className="Profile">
+            <h3 className="Profile-guest-message">
+              <span className="Profile-hi-guest">Hi there,</span> this could be
+              your profile. 🐶
+            </h3>
+            <img src={logo} alt="MOCRS Logo" className="Profile-logo-guest" />
+            <button
+              onClick={() => navigate("/signup")}
+              className="Profile-join"
+            >
+              Claim Profile
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="Profile-Div">
       <Nav />
       <div className="Profile-wrapper-div">
-        <h1 className="Profile-welcome">Hi, {formData.firstName}.</h1>
+        <h1 className="Profile-welcome">Hi, {formData?.firstName}</h1>
 
-        <form className="Profile" onSubmit={handleSubmit}>
+        <form className="Profile">
           <div>
             <h5 className="Profile-heading">
               Manage your account
-              <button onClick={unLock} className="Profile-unlock">
+              <button
+                onClick={unLock}
+                className="Profile-unlock"
+                type="button"
+                disabled={isSubmitting}
+              >
                 Edit profile
               </button>
             </h5>
@@ -110,13 +173,10 @@ const Profile = () => {
               type="text"
               id="username"
               name="username"
-              placeholder="Username"
-              autoComplete="username"
               value={formData.username}
-              onChange={handleChange}
+              autoComplete="username"
               disabled
             />
-            {errors.username && <p className="error">{errors.username}</p>}
           </div>
 
           <div>
@@ -125,11 +185,10 @@ const Profile = () => {
               type="email"
               id="email"
               name="email"
-              placeholder="Email"
-              autoComplete="email"
               value={formData.email}
+              autoComplete="email"
               onChange={handleChange}
-              disabled={locked}
+              disabled={locked || isSubmitting}
             />
             {errors.email && <p className="error">{errors.email}</p>}
           </div>
@@ -140,11 +199,10 @@ const Profile = () => {
               type="text"
               id="firstName"
               name="firstName"
-              placeholder="First name"
-              autoComplete="given-name"
               value={formData.firstName}
+              autoComplete="given-name"
               onChange={handleChange}
-              disabled={locked}
+              disabled={locked || isSubmitting}
             />
             {errors.firstName && <p className="error">{errors.firstName}</p>}
           </div>
@@ -155,34 +213,49 @@ const Profile = () => {
               type="text"
               id="lastName"
               name="lastName"
-              placeholder="Last name"
-              autoComplete="family-name"
               value={formData.lastName}
+              autoComplete="family-name"
               onChange={handleChange}
-              disabled={locked}
+              disabled={locked || isSubmitting}
             />
             {errors.lastName && <p className="error">{errors.lastName}</p>}
           </div>
 
           <div>
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">Password (required for update)</label>
             <input
               type="password"
               id="password"
               name="password"
-              placeholder="Password"
-              autoComplete="new-password"
               value={formData.password}
+              autoComplete="current-password"
               onChange={handleChange}
-              disabled={locked}
+              disabled={locked || isSubmitting}
             />
             {errors.password && <p className="error">{errors.password}</p>}
           </div>
 
-          <button type="submit" className="Profile-submit" disabled={locked}>
-            Update Profile
+          {errors.submit && <p className="error">{errors.submit}</p>}
+
+          <button
+            type="submit"
+            className="Profile-submit"
+            disabled={locked || isSubmitting}
+            onClick={handleSubmit}
+          >
+            {isSubmitting ? "Updating..." : "Update Profile"}
           </button>
         </form>
+        <small className="profile-delete-warning">
+          This action cannot be undone.
+        </small>
+        <button
+          className="Profile-delete"
+          onClick={handleDelete}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Deleting..." : "Delete your account 😬⛔️🚮"}
+        </button>
       </div>
     </div>
   );

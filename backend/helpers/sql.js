@@ -2,7 +2,6 @@ import { BadRequestError } from "../middleware/expressError.js";
 
 /**
  * Helper for making selective update queries.
- *
  * The calling function can use it to make the SET clause of an SQL UPDATE
  * statement.
  *
@@ -11,7 +10,6 @@ import { BadRequestError } from "../middleware/expressError.js";
  *                           like { firstName: "first_name", age: "age" }
  *
  * @returns {Object} { sqlSetCols, dataToUpdate }
- *
  * @example
  *   { firstName: 'Maya', age: 34 } =>
  *   { setCols: '"first_name"=$1, "age"=$2',
@@ -20,8 +18,8 @@ import { BadRequestError } from "../middleware/expressError.js";
 
 function sqlForPartialUpdate(dataToUpdate, jsToSql) {
   const keys = Object.keys(dataToUpdate);
-  if (keys.length === 0) throw new BadRequestError("No data");
-
+  if (keys.length === 0)
+    throw new BadRequestError("No data provided for update");
   // { firstName: 'Maya', age: 34 } => ['"first_name"=$1', '"age"=$2']
   const cols = keys.map(
     (colName, idx) => `"${jsToSql[colName] || colName}"=$${idx + 1}`

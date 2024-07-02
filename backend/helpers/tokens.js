@@ -1,24 +1,22 @@
 import jwt from "jsonwebtoken";
-import colors from "colors";
+import "colors";
 import { SECRET_KEY, APP_DOMAIN, JITSI_APP_ID } from "../config.js";
 
-/**
- * Return signed JWT from user data.
- * @param {Object} user - The user object containing user data.
- * @returns {string} - The signed JWT.
- */
 function createToken(user) {
-  console.assert(
-    user.isAdmin !== undefined,
-    "createToken passed user without isAdmin property"
-  );
-
+  const isAdmin = user.isAdmin !== undefined ? user.isAdmin : false;
   const payload = {
     username: user.username,
-    isAdmin: user.isAdmin || false,
+    isAdmin: isAdmin,
   };
-
-  return jwt.sign(payload, SECRET_KEY);
+  try {
+    const token = jwt.sign(payload, SECRET_KEY, { algorithm: "HS256" });
+    console.log(`Token created: ${token}`.green);
+    console.log(`Token assigned to: ${user.username}`.green);
+    return token;
+  } catch (error) {
+    console.error("Error creating token:", error.message);
+    throw error;
+  }
 }
 
 function generateJitsiToken(user) {

@@ -19,7 +19,9 @@
 
 .SignUpForm {
   padding: 20px;
-  min-width: 400px;
+  width: 100%;
+  max-width: 375px;
+  min-width: 300px;
   border-radius: 10px;
   box-shadow: 0 0 7px 5px #fc02fb, 0 0 10px 7px #fc02fb, 0 0 15px 10px #fc02fb;
   background-color: white;

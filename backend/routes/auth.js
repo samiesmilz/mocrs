@@ -8,32 +8,10 @@ import userAuthSchema from "../schemas/userAuth.js";
 import userRegisterSchema from "../schemas/userRegister.js";
 import { BadRequestError } from "../middleware/expressError.js";
 import { SECRET_KEY } from "../config.js";
-import colors from "colors";
-
-import { createToken, generateJitsiToken } from "../helpers/tokens.js";
-
+import { generateJitsiToken } from "../helpers/tokens.js";
+import { createToken } from "../helpers/tokens.js";
+import "colors";
 const router = express.Router();
-
-/**
- * POST /auth/token:  { username, password } => { token }
- * Returns JWT token which can be used to authenticate further requests.
- * Authorization required: none
- */
-
-router.post("/token", async (req, res, next) => {
-  try {
-    const { error } = jsonschema.validate(req.body, userAuthSchema); // Destructure validation error
-    if (error) {
-      throw new BadRequestError(error.details.map((e) => e.message)); // Format validation errors
-    }
-    const { username, password } = req.body;
-    const user = await User.authenticate(username, password);
-    const token = createToken(user);
-    return res.json({ token });
-  } catch (err) {
-    next(err);
-  }
-});
 
 /**
  * POST /auth/login:  { username, password } => { token }
@@ -90,18 +68,15 @@ router.post("/jtoken", (req, res) => {
   let user = req.body.user;
   if (user && user.token) {
     const token = user.token;
-    console.log("Token received.".yellow);
     try {
       const decoded = jwt.verify(token, SECRET_KEY);
-      console.log("Token verified.".green);
       user = { ...user, moderator: true };
     } catch (tokenError) {
-      console.error("Token verification failed:", tokenError);
       return res.status(401).json({ error: "Invalid token" });
     }
   } else {
-    // If no token is provided or token is null, proceed as a guest
-    console.log("No token provided - Proceeding as guest.");
+    // If no token is provided or token is null
+
     user = {
       username: "Guest",
       email: "",
@@ -112,6 +87,28 @@ router.post("/jtoken", (req, res) => {
 
   const jitsiToken = generateJitsiToken(user);
   res.json({ token: jitsiToken });
+});
+
+/**
+ * POST /auth/token:  { username, password } => { token }
+ * Returns JWT token which can be used to authenticate further requests.
+ * Authorization required: none
+ */
+
+router.post("/token", async (req, res, next) => {
+  try {
+    const { error } = jsonschema.validate(req.body, userAuthSchema);
+    if (error) {
+      throw new BadRequestError(error.details.map((e) => e.message));
+    }
+    const { username, password } = req.body;
+    const user = await User.authenticate(username, password);
+    const token = createToken(user);
+    console.log(`${user.username} assigned token`.green);
+    return res.json({ token });
+  } catch (err) {
+    next(err);
+  }
 });
 
 export default router;

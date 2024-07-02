@@ -1,4 +1,4 @@
-// Enforce strict mode for better practices
+// config.js
 "use strict";
 
 // Import dotenv and colors packages using modern syntax

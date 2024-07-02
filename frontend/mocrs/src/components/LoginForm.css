@@ -6,13 +6,21 @@
   min-height: 100vh;
 }
 .LoginForm-wrapper-div {
-  margin-top: 200px;
-  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 70px;
+  width: 100vw;
+  height: 80vh;
 }
 .LoginForm {
-  margin: 20px;
   padding: 20px;
-  min-width: 400px;
+  width: 100%;
+  max-width: 350px;
+  min-width: 300px;
+  border-radius: 10px;
+  margin: 20px 15px;
   border-radius: 10px;
   margin: 20px auto;
   box-shadow: 0 0 7px 5px #fc02fb, 0 0 10px 7px #fc02fb, 0 0 15px 10px #fc02fb;

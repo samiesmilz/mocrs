@@ -18,9 +18,11 @@
 
 .Profile {
   padding: 20px;
-  width: 400px;
+  width: 100%;
+  max-width: 400px;
+  min-width: 300px;
   border-radius: 10px;
-  margin: 20px auto;
+  margin: 20px 15px;
   box-shadow: 0 0 7px 5px #fc02fb, 0 0 10px 7px #fc02fb, 0 0 15px 10px #fc02fb;
   cursor: pointer;
 }
@@ -105,4 +107,49 @@
 .Profile button:hover {
   background: linear-gradient(45deg, black, #fc02fb);
   color: white;
+}
+
+.Profile button:focus {
+  outline-color: #fc02fb;
+}
+
+.Profile-join {
+  width: 100%;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 15px 20px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.Profile-join:hover {
+  background: linear-gradient(45deg, black, #fc02fb);
+  color: white;
+}
+.Profile-guest-message {
+  color: #330033;
+  font-size: 20px;
+}
+.Profile-hi-guest {
+  color: #fc02fb;
+}
+
+.Profile-delete {
+  color: #fc02a0;
+  font-size: small;
+}
+.Profile-delete:hover {
+  background-color: #fc0240;
+  color: white;
+  border: #000000 1px solid;
+  font-size: small;
+}
+.Profile-rooms {
+  background-color: #fc02fb;
+}
+
+.Profile-logo-guest {
+  width: 400px;
 }

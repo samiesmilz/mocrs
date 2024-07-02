@@ -4,21 +4,24 @@
 
 import jsonschema from "jsonschema";
 import express from "express";
-import { ensureCorrectUserOrAdmin, ensureAdmin } from "../middleware/auth.js";
+import {
+  ensureCorrectUserOrAdmin,
+  authenticateJWT,
+  ensureAdmin,
+} from "../middleware/auth.js";
 import { BadRequestError } from "../middleware/expressError.js";
-import User from "../models/user.js";
+import User from "../models/user.js"; // Importing User model directly
 import { createToken } from "../helpers/tokens.js";
 import userNewSchema from "../schemas/userNew.js";
 import userUpdateSchema from "../schemas/userUpdate.js";
 
 const router = express.Router();
-
+router.use(authenticateJWT);
 /**
- * POST / { user }  => { user, token }
- * Adds a new user. This is not the registration endpoint --- instead, this is
- * only for admin users to add new users. The new user added can be an admin.
- * This returns the newly created user and an authentication token for them:
- *  {user: { username, firstName, lastName, email, isAdmin }, token }
+ * POST /users
+ * Adds a new user. This endpoint is for admin users to add new users.
+ * Returns the newly created user and an authentication token for them:
+ * { user: { username, firstName, lastName, email, isAdmin }, token }
  * Authorization required: admin
  */
 router.post("/", ensureAdmin, async (req, res, next) => {
@@ -37,7 +40,7 @@ router.post("/", ensureAdmin, async (req, res, next) => {
 });
 
 /**
- * GET / => { users: [ {username, firstName, lastName, email }, ... ] }
+ * GET /users
  * Returns list of all users.
  * Authorization required: admin
  */
@@ -51,9 +54,9 @@ router.get("/", ensureAdmin, async (req, res, next) => {
 });
 
 /**
- * GET /[username] => { user }
- * Returns { username, firstName, lastName, isAdmin, rooms }
- *   where rooms is { id, uuid, name, description, room_type, is_private, creator_id,created_at,participants } * Authorization required: admin or same user-as-:username
+ * GET /users/:username
+ * Returns detailed information about a specific user.
+ * Authorization required: admin or same user-as-:username
  */
 router.get("/:username", ensureCorrectUserOrAdmin, async (req, res, next) => {
   try {
@@ -65,15 +68,18 @@ router.get("/:username", ensureCorrectUserOrAdmin, async (req, res, next) => {
 });
 
 /**
- * ATCH /[username] { user } => { user }
+ * PATCH /users/:username
+ * Updates user information.
  * Data can include:
- *   { firstName, lastName, password, email }
- * Returns { username, firstName, lastName, email, isAdmin }
+ * { firstName, lastName, password, email }
+ * Returns updated user information.
  * Authorization required: admin or same-user-as-:username
  */
 router.patch("/:username", ensureCorrectUserOrAdmin, async (req, res, next) => {
   try {
     const validator = jsonschema.validate(req.body, userUpdateSchema);
+    console.log(`User in patch: ${req.body}`);
+    console.log(`Validator returned: ${validator.valid}`);
     if (!validator.valid) {
       const errs = validator.errors.map((e) => e.stack);
       throw new BadRequestError(errs);
@@ -86,7 +92,8 @@ router.patch("/:username", ensureCorrectUserOrAdmin, async (req, res, next) => {
 });
 
 /**
- * DELETE /[username]  =>  { deleted: username }
+ * DELETE /users/:username
+ * Deletes a user.
  * Authorization required: admin or same-user-as-:username
  */
 router.delete(
@@ -94,6 +101,7 @@ router.delete(
   ensureCorrectUserOrAdmin,
   async (req, res, next) => {
     try {
+      console.log(`Request to delete: ${req.params.username}`);
       await User.remove(req.params.username);
       return res.json({ deleted: req.params.username });
     } catch (err) {

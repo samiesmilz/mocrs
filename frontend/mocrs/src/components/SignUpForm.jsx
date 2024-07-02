@@ -1,13 +1,13 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import "./SignUpForm.css";
 import { registerUser } from "../services/api";
 import { useNavigate, Link } from "react-router-dom";
-import Nav from "../components/Nav";
-import AuthContext from "./AuthContext";
+import Nav from "./Nav";
+import { useAuth } from "./useAuth";
 
 const SignUpForm = () => {
   const navigate = useNavigate();
-  const { setUserInContext, setMocrsLocalUser } = useContext(AuthContext);
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     username: "",
     firstName: "",
@@ -66,9 +66,8 @@ const SignUpForm = () => {
           if (newUser && token) {
             console.log(`Current user: ${newUser.username}`);
             // Set user and token in context and local storage
-            setUserInContext({ ...newUser, token: token });
-            setMocrsLocalUser({ ...newUser, token: token });
-            localStorage.setItem("mocrsAuthToken", token);
+            const user = { ...newUser, token };
+            login(user, token);
 
             // Navigate to the desired page
             navigate("/spaces");

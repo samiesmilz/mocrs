@@ -1,11 +1,9 @@
 import { Link } from "react-router-dom";
 import navlogo from "../assets/nav-logo.gif";
-import { useContext } from "react";
-import AuthContext from "./AuthContext";
-
+import { useAuth } from "./useAuth";
 import "./Nav.css";
 const Nav = () => {
-  const { user } = useContext(AuthContext);
+  const { mocrsUser } = useAuth();
   return (
     <nav className="Nav">
       <Link to="/">
@@ -14,7 +12,7 @@ const Nav = () => {
       <div className="Nav-links">
         <Link to="/spaces">Spaces</Link>
 
-        {user !== null ? (
+        {mocrsUser !== null ? (
           <>
             <Link to="/new-space" className="Nav-create-space">
               Create space
@@ -33,7 +31,7 @@ const Nav = () => {
             </Link>
           </>
         )}
-        <Link to="/profile" className="Nav-profile-link">
+        <Link to={`/profile`} className="Nav-profile-link">
           ☻
         </Link>
       </div>

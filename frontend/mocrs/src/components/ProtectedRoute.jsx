@@ -1,23 +1,24 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "./AuthContext";
+import { useAuth } from "./useAuth";
 import PropTypes from "prop-types";
 import "./ProtectedRoute.css";
 import Nav from "./Nav";
 import logo from "../assets/mocrs.gif";
 
 const ProtectedRoute = ({ children }) => {
-  const { user, mocrsLocalUser } = useContext(AuthContext);
+  const { isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (user || mocrsLocalUser) {
-      setIsAuthenticated(true);
+    if (!isAuthenticated) {
+      navigate("/login");
     }
-    setIsLoading(false); // Mark loading as false once authentication status is determined
-  }, [user, mocrsLocalUser]);
+  }, [isAuthenticated, navigate]);
+
+  const handleClick = () => {
+    navigate("/login");
+  };
 
   if (isLoading) {
     return (
@@ -33,8 +34,22 @@ const ProtectedRoute = ({ children }) => {
   }
 
   if (!isAuthenticated) {
-    navigate("/login"); // Navigate to login page if not authenticated
-    return null; // Optional: Return null or loading indicator while redirecting
+    return (
+      <div className="LiveSpace">
+        <Nav />
+        <div className="loading-container">
+          <img src={logo} alt="MOCRS Logo" className="LiveSpace-loading" />
+          <p className="loading">Join the conversation...</p>
+          <p className="loading-notify">
+            Please 👉🏼{" "}
+            <button onClick={handleClick} className="loading-login">
+              login/signup
+            </button>{" "}
+            to instally access rooms. 🎉
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return children; // Render protected content if authenticated

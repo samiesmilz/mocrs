@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback, useRef, useContext } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { JitsiMeeting } from "@jitsi/react-sdk";
 import { useParams, useNavigate } from "react-router-dom";
-import AuthContext from "./AuthContext";
+import { useAuth } from "./useAuth";
 import {
   getRoom,
   joinRoom,
@@ -9,7 +9,7 @@ import {
   createJitsiToken,
 } from "../services/api";
 import "./LiveSpace.css";
-import Nav from "../components/Nav";
+import Nav from "./Nav";
 import ico from "../assets/mocrs.ico";
 import logo from "../assets/mocrs.gif";
 
@@ -34,9 +34,9 @@ let interfaceConfig = {
 };
 
 const LiveSpace = () => {
+  const { mocrsUser } = useAuth();
   const navigate = useNavigate();
   const { id } = useParams();
-  const { user } = useContext(AuthContext);
   const [room, setRoom] = useState(null);
   const [error, setError] = useState(null);
   const [token, setToken] = useState(null);
@@ -51,8 +51,8 @@ const LiveSpace = () => {
         if (!roomResponse.data) {
           setError("Room not found");
         }
-        if (user !== null) {
-          const data = { ...roomResponse.data, user: user };
+        if (mocrsUser !== null) {
+          const data = { ...roomResponse.data, user: mocrsUser };
           const tokenResponse = await createJitsiToken(data);
           setToken(tokenResponse.data.token);
           console.log("User established:");
@@ -76,7 +76,7 @@ const LiveSpace = () => {
         jitsiApiRef.current.dispose();
       }
     };
-  }, [id, user]);
+  }, [id, mocrsUser]);
 
   const handleMeetingEnd = useCallback(() => {
     navigate("/spaces");
@@ -178,8 +178,8 @@ const LiveSpace = () => {
         }}
         interfaceConfigOverwrite={interfaceConfig}
         userInfo={{
-          displayName: user?.firstName || "",
-          email: user?.email || "",
+          displayName: mocrsUser?.firstName || "",
+          email: mocrsUser?.email || "",
         }}
         onApiReady={handleAPIReady}
         onReadyToClose={handleMeetingEnd}

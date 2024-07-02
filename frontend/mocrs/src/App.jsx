@@ -1,45 +1,16 @@
 // App.jsx
-import { useState, useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
 import "./App.css";
-import AllRoutes from "./AllRoutes";
-import AuthContext from "./components/AuthContext";
-import useLocalStorage from "./hooks/useLocalStorage";
+import AllRoutes from "./components/AllRoutes";
+import { AuthProvider } from "./components/AuthProvider";
 
 function App() {
-  const [user, setUserInContext] = useState(null);
-  const [mocrsAuthToken, setMocrsAuthToken] = useLocalStorage(
-    "mocrsAuthToken",
-    null
-  );
-  const [mocrsLocalUser, setMocrsLocalUser] = useLocalStorage(
-    "mocrsLocalUser",
-    null
-  );
-
-  useEffect(() => {
-    if (mocrsLocalUser) {
-      setUserInContext(mocrsLocalUser);
-    }
-  }, [mocrsLocalUser]);
-
   return (
-    <>
-      <BrowserRouter>
-        <AuthContext.Provider
-          value={{
-            user,
-            setUserInContext,
-            mocrsLocalUser,
-            setMocrsLocalUser,
-            mocrsAuthToken,
-            setMocrsAuthToken,
-          }}
-        >
-          <AllRoutes />
-        </AuthContext.Provider>
-      </BrowserRouter>
-    </>
+    <BrowserRouter>
+      <AuthProvider>
+        <AllRoutes />
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 

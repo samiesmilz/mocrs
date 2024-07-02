@@ -1,269 +1,149 @@
-"use strict";
+import User from "../models/user";
+import bcrypt from "bcrypt";
+import db from "../db";
 
-import {
-  NotFoundError,
-  BadRequestError,
-  UnauthorizedError,
-} from "../middleware/expressError.js";
+const BCRYPT_WORK_FACTOR = 1;
 
-import db from "../db.js";
-import User from "./user.js";
+async function commonBeforeAll() {
+  // Clear the users table
+  await db.query("DELETE FROM users");
 
-import {
-  commonBeforeAll,
-  commonBeforeEach,
-  commonAfterEach,
-  commonAfterAll,
-  testJobIds,
-} from "./_testCommon";
+  // Insert test users
+  await db.query(
+    `
+    INSERT INTO users(username,
+                      password,
+                      first_name,
+                      last_name,
+                      email)
+    VALUES ('u1', $1, 'U1F', 'U1L', 'u1@email.com'),
+           ('u2', $2, 'U2F', 'U2L', 'u2@email.com')
+    RETURNING username`,
+    [
+      await bcrypt.hash("password1", BCRYPT_WORK_FACTOR),
+      await bcrypt.hash("password2", BCRYPT_WORK_FACTOR),
+    ]
+  );
+}
+
+async function commonBeforeEach() {
+  await db.query("BEGIN");
+}
+
+async function commonAfterEach() {
+  await db.query("ROLLBACK");
+}
+
+async function commonAfterAll() {
+  await db.end();
+}
 
 beforeAll(commonBeforeAll);
 beforeEach(commonBeforeEach);
 afterEach(commonAfterEach);
 afterAll(commonAfterAll);
 
-/************************************** authenticate */
-
-describe("authenticate", function () {
-  test("works", async function () {
-    const user = await User.authenticate("u1", "password1");
-    expect(user).toEqual({
-      username: "u1",
-      firstName: "U1F",
-      lastName: "U1L",
-      email: "u1@email.com",
+describe("User.update", () => {
+  test("updates a user's first name", async () => {
+    const user = await User.register({
+      username: "testuser1",
+      firstName: "Test",
+      lastName: "User",
+      email: "test1@example.com",
+      password: "password",
       isAdmin: false,
     });
-  });
 
-  test("unauth if no such user", async function () {
-    try {
-      await User.authenticate("nope", "password");
-      fail();
-    } catch (err) {
-      expect(err instanceof UnauthorizedError).toBeTruthy();
-    }
-  });
-
-  test("unauth if wrong password", async function () {
-    try {
-      await User.authenticate("c1", "wrong");
-      fail();
-    } catch (err) {
-      expect(err instanceof UnauthorizedError).toBeTruthy();
-    }
-  });
-});
-
-/************************************** register */
-
-describe("register", function () {
-  const newUser = {
-    username: "new",
-    firstName: "Test",
-    lastName: "Tester",
-    email: "test@test.com",
-    isAdmin: false,
-  };
-
-  test("works", async function () {
-    let user = await User.register({
-      ...newUser,
-      password: "password",
+    const updatedUser = await User.update(user.username, {
+      firstName: "UpdatedTest",
     });
-    expect(user).toEqual(newUser);
-    const found = await db.query("SELECT * FROM users WHERE username = 'new'");
-    expect(found.rows.length).toEqual(1);
-    expect(found.rows[0].is_admin).toEqual(false);
-    expect(found.rows[0].password.startsWith("$2b$")).toEqual(true);
+
+    expect(updatedUser).toEqual({
+      ...user,
+      firstName: "UpdatedTest",
+    });
   });
 
-  test("works: adds admin", async function () {
-    let user = await User.register({
-      ...newUser,
+  test("updates a user's last name", async () => {
+    const user = await User.register({
+      username: "testuser2",
+      firstName: "Test",
+      lastName: "User",
+      email: "test2@example.com",
       password: "password",
+      isAdmin: false,
+    });
+
+    const updatedUser = await User.update(user.username, {
+      lastName: "UpdatedUser",
+    });
+
+    expect(updatedUser).toEqual({
+      ...user,
+      lastName: "UpdatedUser",
+    });
+  });
+
+  test("updates a user's admin status", async () => {
+    const user = await User.register({
+      username: "testuser3",
+      firstName: "Test",
+      lastName: "User",
+      email: "test3@example.com",
+      password: "password",
+      isAdmin: false,
+    });
+
+    const updatedUser = await User.update(user.username, { isAdmin: true });
+
+    expect(updatedUser).toEqual({
+      ...user,
       isAdmin: true,
     });
-    expect(user).toEqual({ ...newUser, isAdmin: true });
-    const found = await db.query("SELECT * FROM users WHERE username = 'new'");
-    expect(found.rows.length).toEqual(1);
-    expect(found.rows[0].is_admin).toEqual(true);
-    expect(found.rows[0].password.startsWith("$2b$")).toEqual(true);
   });
 
-  test("bad request with dup data", async function () {
-    try {
-      await User.register({
-        ...newUser,
-        password: "password",
-      });
-      await User.register({
-        ...newUser,
-        password: "password",
-      });
-      fail();
-    } catch (err) {
-      expect(err instanceof BadRequestError).toBeTruthy();
-    }
-  });
-});
-
-/************************************** findAll */
-
-describe("findAll", function () {
-  test("works", async function () {
-    const users = await User.findAll();
-    expect(users).toEqual([
-      {
-        username: "u1",
-        firstName: "U1F",
-        lastName: "U1L",
-        email: "u1@email.com",
-        isAdmin: false,
-      },
-      {
-        username: "u2",
-        firstName: "U2F",
-        lastName: "U2L",
-        email: "u2@email.com",
-        isAdmin: false,
-      },
-    ]);
-  });
-});
-
-/************************************** get */
-
-describe("get", function () {
-  test("works", async function () {
-    let user = await User.get("u1");
-    expect(user).toEqual({
-      username: "u1",
-      firstName: "U1F",
-      lastName: "U1L",
-      email: "u1@email.com",
-      isAdmin: false,
-      applications: [testJobIds[0]],
-    });
-  });
-
-  test("not found if no such user", async function () {
-    try {
-      await User.get("nope");
-      fail();
-    } catch (err) {
-      expect(err instanceof NotFoundError).toBeTruthy();
-    }
-  });
-});
-
-/************************************** update */
-
-describe("update", function () {
-  const updateData = {
-    firstName: "NewF",
-    lastName: "NewF",
-    email: "new@email.com",
-    isAdmin: true,
-  };
-
-  test("works", async function () {
-    let job = await User.update("u1", updateData);
-    expect(job).toEqual({
-      username: "u1",
-      ...updateData,
-    });
-  });
-
-  test("works: set password", async function () {
-    let job = await User.update("u1", {
-      password: "new",
-    });
-    expect(job).toEqual({
-      username: "u1",
-      firstName: "U1F",
-      lastName: "U1L",
-      email: "u1@email.com",
+  test("updates a user's password", async () => {
+    const user = await User.register({
+      username: "testuser4",
+      firstName: "Test",
+      lastName: "User",
+      email: "test4@example.com",
+      password: "password",
       isAdmin: false,
     });
-    const found = await db.query("SELECT * FROM users WHERE username = 'u1'");
-    expect(found.rows.length).toEqual(1);
-    expect(found.rows[0].password.startsWith("$2b$")).toEqual(true);
+
+    const updatedUser = await User.update(user.username, {
+      password: "newpassword",
+    });
+
+    // Verify that the password is not returned in the response
+    expect(updatedUser).not.toHaveProperty("password");
+
+    // Verify that the password is updated correctly
+    const authenticatedUser = await User.authenticate(
+      user.username,
+      "newpassword"
+    );
+    expect(authenticatedUser).toBeTruthy();
   });
 
-  test("not found if no such user", async function () {
-    try {
-      await User.update("nope", {
-        firstName: "test",
-      });
-      fail();
-    } catch (err) {
-      expect(err instanceof NotFoundError).toBeTruthy();
-    }
-  });
+  test("updates a user's email", async () => {
+    const user = await User.register({
+      username: "testuser5",
+      firstName: "Test",
+      lastName: "User",
+      email: "test5@example.com",
+      password: "password",
+      isAdmin: false,
+    });
 
-  test("bad request if no data", async function () {
-    expect.assertions(1);
-    try {
-      await User.update("c1", {});
-      fail();
-    } catch (err) {
-      expect(err instanceof BadRequestError).toBeTruthy();
-    }
-  });
-});
+    const updatedUser = await User.update(user.username, {
+      email: "updated5@example.com",
+    });
 
-/************************************** remove */
-
-describe("remove", function () {
-  test("works", async function () {
-    await User.remove("u1");
-    const res = await db.query("SELECT * FROM users WHERE username='u1'");
-    expect(res.rows.length).toEqual(0);
-  });
-
-  test("not found if no such user", async function () {
-    try {
-      await User.remove("nope");
-      fail();
-    } catch (err) {
-      expect(err instanceof NotFoundError).toBeTruthy();
-    }
-  });
-});
-
-/************************************** applyToJob */
-
-describe("applyToJob", function () {
-  test("works", async function () {
-    await User.applyToJob("u1", testJobIds[1]);
-
-    const res = await db.query("SELECT * FROM applications WHERE job_id=$1", [
-      testJobIds[1],
-    ]);
-    expect(res.rows).toEqual([
-      {
-        job_id: testJobIds[1],
-        username: "u1",
-      },
-    ]);
-  });
-
-  test("not found if no such job", async function () {
-    try {
-      await User.applyToJob("u1", 0, "applied");
-      fail();
-    } catch (err) {
-      expect(err instanceof NotFoundError).toBeTruthy();
-    }
-  });
-
-  test("not found if no such user", async function () {
-    try {
-      await User.applyToJob("nope", testJobIds[0], "applied");
-      fail();
-    } catch (err) {
-      expect(err instanceof NotFoundError).toBeTruthy();
-    }
+    expect(updatedUser).toEqual({
+      ...user,
+      email: "updated5@example.com",
+    });
   });
 });

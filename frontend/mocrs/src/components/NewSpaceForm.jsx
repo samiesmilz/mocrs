@@ -1,21 +1,22 @@
 // NewSpaceForm.jsx
 
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createRoom } from "../services/api";
-import AuthContext from "./AuthContext";
+import { useAuth } from "./useAuth";
 import Nav from "../components/Nav";
 import "./NewSpaceForm.css";
+import logo from "../assets/mocrs.gif";
 
 const NewSpaceForm = () => {
+  const { mocrsUser, token } = useAuth();
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     room_type: "meeting",
     is_private: false,
-    creator_id: user.id,
+    creator_id: mocrsUser.id,
   });
   const [error, setError] = useState(null);
 
@@ -43,6 +44,29 @@ const NewSpaceForm = () => {
       setError("Failed to create room. Please try again.");
     }
   };
+
+  const handleClick = () => {
+    navigate("/login");
+  };
+
+  if (!mocrsUser || !token) {
+    return (
+      <div className="LiveSpace">
+        <Nav />
+        <div className="loading-container">
+          <img src={logo} alt="MOCRS Logo" className="LiveSpace-loading" />
+          <p className="loading">Join the conversation...</p>
+          <p className="loading-notify">
+            Please 👉🏼{" "}
+            <button onClick={handleClick} className="loading-login">
+              login/signup
+            </button>{" "}
+            to instally access rooms. 🎉
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="NewSpace-Div">
@@ -75,7 +99,9 @@ const NewSpaceForm = () => {
             onChange={handleChange}
           >
             <option value="meeting">Meeting</option>
+            <option value="social">Stream</option>
             <option value="study">Study</option>
+            <option value="stream">Stream</option>
             <option value="focus">Focus</option>
             <option value="chat">Chat</option>
           </select>

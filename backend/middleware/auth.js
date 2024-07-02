@@ -3,34 +3,55 @@
 import jwt from "jsonwebtoken";
 import { SECRET_KEY } from "../config.js";
 import { UnauthorizedError } from "./expressError.js";
+import "colors";
 
 /**
- * Middleware: Authenticate user.
- * If a token is provided, verify it and store the decoded payload
- * (including username and isAdmin) on res.locals.
- * Doesn't throw an error if no token is provided or if the token is invalid.
+ * Middleware: Authenticate user via JWT.
+ * If a valid token is provided in the Authorization header,
+ * decode it and attach the user information to req.user.
+ * If token is missing or invalid, respond with 401 Unauthorized.
  */
+
 const authenticateJWT = (req, res, next) => {
   try {
-    const authHeader = req.headers?.authorization;
+    console.log("Authenticating...".green);
+    const authHeader = req.headers.authorization;
+    console.log("Authheader: ", authHeader);
+
     if (authHeader) {
-      const token = authHeader.replace(/^[Bb]earer /, "").trim();
-      res.locals.user = jwt.verify(token, SECRET_KEY);
+      const regex = /Bearer\s+([^"]+)/;
+      const match = authHeader.match(regex);
+      if (match && match[1]) {
+        const token = match[1];
+        console.log(`Extracted token: ${token}`);
+        console.log(`Received token: ${token}`.pink);
+        const decoded = jwt.verify(token, SECRET_KEY);
+        console.log(`Decoded token:`, decoded);
+        req.user = decoded;
+        console.log(`Authorized user:`, req.user);
+      } else {
+        console.log("Token not found");
+      }
+    } else {
+      console.log("No token provided or invalid format.".yellow);
+      req.user = undefined; // Explicitly set to null when no token
     }
-    next();
-  } catch (err) {
-    next();
+  } catch (error) {
+    console.error("JWT verification failed:".red, error.message);
+    req.user = undefined; // Set to null on error
+  } finally {
+    next(); // Always proceed to next middleware
   }
 };
 
 /**
  * Middleware: Ensure user is logged in.
- * Throws an UnauthorizedError if no user is found on res.locals (indicating no valid token).
+ * Throws an UnauthorizedError if no user is found on req.user.
  */
 const ensureLoggedIn = (req, res, next) => {
   try {
-    if (!res.locals.user) {
-      throw new UnauthorizedError();
+    if (!req.user) {
+      throw new UnauthorizedError("Unauthorized - you must be logged in.");
     }
     next();
   } catch (err) {
@@ -40,12 +61,12 @@ const ensureLoggedIn = (req, res, next) => {
 
 /**
  * Middleware: Ensure user is an admin.
- * Throws an UnauthorizedError if the user on res.locals is not present or lacks the "isAdmin" property.
+ * Throws an UnauthorizedError if the user on req.user is not an admin.
  */
 const ensureAdmin = (req, res, next) => {
   try {
-    if (!res.locals.user || !res.locals.user.isAdmin) {
-      throw new UnauthorizedError();
+    if (!req.user || !req.user.isAdmin) {
+      throw new UnauthorizedError("Unauthorized - you must be an admin.");
     }
     next();
   } catch (err) {
@@ -55,15 +76,21 @@ const ensureAdmin = (req, res, next) => {
 
 /**
  * Middleware: Ensure user has a valid token and matches the username in the route parameter.
- * Throws an UnauthorizedError if the user on res.locals is missing, lacks admin privileges, or doesn't match the username.
+ * Throws an UnauthorizedError if the user on req.user is missing, lacks admin privileges, or doesn't match the username.
  */
 const ensureCorrectUserOrAdmin = (req, res, next) => {
   try {
-    const user = res.locals.user;
-    if (!(user && (user.isAdmin || user.username === req.params.username))) {
-      throw new UnauthorizedError();
+    console.log("Checking user in ensure user or admin...".blue);
+    if (
+      req.user &&
+      (req.user.isAdmin || req.user.username === req.params.username)
+    ) {
+      return next();
+    } else {
+      throw new UnauthorizedError(
+        "Unauthorized - must be the account owner or the admin"
+      );
     }
-    next();
   } catch (err) {
     next(err);
   }
