@@ -85,15 +85,17 @@ const SpaceList = () => {
         )}
       </h2>
       <div className="SpacesList-spaces">
-        {rooms.map((space) => (
-          <Link
-            to={`/spaces/${space.uuid}`}
-            key={space.id}
-            className="Space-card"
-          >
-            <Space room={space} />
-          </Link>
-        ))}
+        {rooms
+          .filter((space) => !space.is_private)
+          .map((space) => (
+            <Link
+              to={`/spaces/${space.uuid}`}
+              key={space.id}
+              className="Space-card"
+            >
+              <Space room={space} />
+            </Link>
+          ))}
       </div>
       <p className="SpaceList-footer-notification">
         There {rooms.length === 1 ? "is" : "are"}{" "}

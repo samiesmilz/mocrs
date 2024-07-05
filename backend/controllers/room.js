@@ -23,7 +23,7 @@ export async function getRooms(req, res, next) {
  */
 export async function findByCreator(req, res, next) {
   try {
-    const { id } = req.body;
+    const { id } = req.params;
     const rooms = await Room.findByCreator(id);
     res.json(rooms);
   } catch (err) {
@@ -64,6 +64,44 @@ export async function getRoom(req, res, next) {
     const { id } = req.params;
     const room = await Room.get(id);
     res.json(room);
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * Update a room.
+ * @param {Object} req - Express request object with room data.
+ * @param {Object} res - Express response object.
+ * @param {Function} next - Next middleware function.
+ */
+export async function updateRoom(req, res, next) {
+  try {
+    const { id } = req.params;
+    const data = req.body;
+    const room = await Room.update(id, data);
+    res.status(201).json(room);
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * Delete a room.
+ * @function deleteRoom
+ * @param {Object} req - Express request object with room UUID.
+ * @param {Object} res - Express response object.
+ * @param {Function} next - Next middleware function.
+ * @returns {void}
+ * @throws Will throw an error if the room does not exist or if there is an issue with the database operation.
+ * @description This function deletes a room from the database based on the provided room UUID.
+ * It sends a 204 No Content response to the client upon successful deletion.
+ */
+export async function deleteRoom(req, res, next) {
+  try {
+    const { id } = req.params;
+    const name = await Room.delete(id);
+    res.status(204).json(name);
   } catch (err) {
     next(err);
   }

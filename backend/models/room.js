@@ -134,7 +134,7 @@ class Room {
    * @returns {Promise<Object>} The updated room.
    * @throws {NotFoundError} If no room found with the given UUID.
    */
-  static async update(uuid, data) {
+  static async update(id, data) {
     const { name, description, room_type, is_private } = data;
     const result = await db.query(
       `UPDATE rooms
@@ -142,9 +142,9 @@ class Room {
            description = $2,
            room_type = $3,
            is_private = $4
-       WHERE uuid = $5
+       WHERE id = $5
        RETURNING *`,
-      [name, description, room_type, is_private, uuid]
+      [name, description, room_type, is_private, id]
     );
     if (result.rows.length === 0) {
       throw new NotFoundError(`No room: ${uuid}`);
@@ -158,13 +158,13 @@ class Room {
    * @returns {Promise<void>}
    * @throws {NotFoundError} If no room found with the given UUID.
    */
-  static async remove(uuid) {
+  static async delete(id) {
     const result = await db.query(
-      "DELETE FROM rooms WHERE uuid = $1 RETURNING *",
-      [uuid]
+      "DELETE FROM rooms WHERE id = $1 RETURNING name",
+      [id]
     );
     if (result.rows.length === 0) {
-      throw new NotFoundError(`No room: ${uuid}`);
+      throw new NotFoundError(`No room: ${id}`);
     }
   }
 }

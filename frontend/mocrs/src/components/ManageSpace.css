@@ -1,11 +1,11 @@
-.NewSpace-Div {
+.ManageSpace-Div {
   display: flex;
   flex-direction: column;
   min-width: 100vw;
   min-height: 100vh;
 }
 
-.NewSpace-Div input,
+.ManageSpace-Div input,
 textarea,
 select:focus {
   outline-color: #fc02fccf;
@@ -15,15 +15,18 @@ select:focus {
   width: 100%;
   height: 50px;
 }
-.NewSpaceForm-div {
+.ManageSpace-div {
   display: flex;
   flex-direction: column;
   justify-content: center;
   min-width: 100vw;
   min-height: 90vh;
 }
+.ManageSpace-title {
+  font-size: larger;
+}
 
-.create-room-form {
+.Update-room-form {
   margin: 20px;
   padding: 20px;
   /* border: 1px solid #ccc; */
@@ -37,11 +40,11 @@ select:focus {
   cursor: pointer;
 }
 
-.create-room-form h2 {
+.Update-room-form h2 {
   margin-bottom: 20px;
 }
 
-.NewSpaceForm-name {
+.ManageSpace-name {
   width: calc(100% - 35px);
   padding: 15px;
   margin-bottom: 10px;
@@ -49,13 +52,12 @@ select:focus {
   border: 1px solid #ccc;
 }
 
-.create-room-form textarea {
+.Update-room-form textarea {
   width: calc(100% - 35px);
   padding: 15px;
   margin-bottom: 10px;
   border-radius: 4px;
   border: 1px solid #ccc;
-
   line-height: 1.5em; /* Adjust as needed */
   height: calc(
     1.5em * 5
@@ -64,7 +66,7 @@ select:focus {
   overflow: hidden; /* Hide overflow to prevent scrollbar */
   resize: none; /* Prevent resizing */
 }
-.create-room-form select {
+.Update-room-form select {
   width: calc(100% - 2px);
   padding: 15px;
   margin-bottom: 10px;
@@ -72,7 +74,7 @@ select:focus {
   border: 1px solid #ccc;
 }
 
-.NewSpaceForm-checkbox {
+.ManageSpace-checkbox {
   display: flex;
   flex-direction: row;
   padding-left: 0px;
@@ -80,23 +82,61 @@ select:focus {
   margin-bottom: 15px;
 }
 
-.Form-checkbox-text {
+.ManageSpace-checkbox-text {
   width: 100px;
   font-size: small;
   color: black;
 }
-.create-room-form button {
-  width: 100%;
-  background: black;
+.Update-room-form button {
   color: white;
   border: none;
   border-radius: 4px;
-  padding: 15px 20px;
   cursor: pointer;
   transition: background 0.3s;
 }
 
-.create-room-form button:hover {
+.ManageSpace-unlock {
+  display: inline;
+  font-size: small;
+  margin-left: 15px;
+  border: 0.2px dotted #fc02fb;
+  background-color: #fc02fb;
+}
+
+.ManageSpace-update-btn {
+  width: 100%;
+  padding: 15px 20px;
+  background-color: #000000;
+}
+
+.Update-room-form button:hover {
   background: linear-gradient(45deg, black, #fc02fb);
   color: white;
+}
+.Space-delete-warning {
+  font-size: small;
+  font-weight: 500;
+}
+
+.Space-delete {
+  color: #fd0aa4;
+  font-size: small;
+}
+.Space-delete:hover {
+  background-color: #fc0240;
+  color: white;
+  border: #000000 1px solid;
+  font-size: small;
+}
+
+.Space-see-ya {
+  color: #fc02d6;
+  margin: 2px;
+  font-size: x-small;
+}
+
+.ManageSpace-error-message {
+  font-size: medium;
+  color: white;
+  background: linear-gradient(to right, #0f0f17, #fc02fb, #0f0f17);
 }

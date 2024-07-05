@@ -7,7 +7,11 @@ const Space = ({ room }) => {
     <div className="Space">
       <h4 className="Space-title">Space Name: {room.name}</h4>
       <p>{room.participants}: participants</p>
-      <p>Description: {room.description}</p>
+      <p>
+        Description:{" "}
+        {room.description.substring(0, 140) +
+          (room.description.length > 140 ? "..." : "")}
+      </p>
       <p>Tags: #newroom</p>
       <div>
         <button className="Join-space">Join space</button>

@@ -1,7 +1,8 @@
 import axios from "axios";
 
-const LIVE_URL = import.meta.env.VITE_LIVE_URL;
+// const API_URL = import.meta.env.VITE_API_URL;
 const API_URL = "https://mocrs-backend.onrender.com/api";
+const LIVE_URL = import.meta.env.VITE_LIVE_URL;
 
 // Create an axios instance with default configurations
 const apiClient = axios.create({
@@ -42,7 +43,9 @@ apiClient.interceptors.request.use(
 // Room routes
 export const getAllRooms = () => apiClient.get("/rooms");
 export const createRoom = (data) => apiClient.post("/rooms", data);
+export const updateRoom = (id, data) => apiClient.patch(`/rooms/${id}`, data);
 export const getRoom = (id) => apiClient.get(`/rooms/${id}`);
+export const deleteRoom = (id) => apiClient.delete(`/rooms/${id}`);
 export const joinRoom = (id) => apiClient.post(`/rooms/${id}/join`);
 export const leaveRoom = (id) => apiClient.post(`/rooms/${id}/leave`);
 export const getPublicRooms = () => apiClient.get("/rooms/public");

@@ -5,31 +5,108 @@
   min-width: 100vw;
   min-height: 100vh;
 }
+.Profile-logout {
+  width: 100%;
+  text-align: end;
+  color: white;
+  justify-self: end;
+  background: linear-gradient(to bottom, #fc02fc72, white);
+}
 
+.Profile-logout-link {
+  color: #fc02fb;
+  padding: 5px 25px;
+  padding-top: 3px;
+  font-size: small;
+  border: 1px dotted black;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  background-color: white;
+}
+.Profile-logout-link:hover {
+  background: linear-gradient(to right, #0f0f17, #fc02fb, #0f0f17);
+  color: white;
+  font-weight: 600;
+}
 .Profile-wrapper-div {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+  width: 100%;
+}
+.Profile-guest-div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 93vh;
+}
+.Profile-form-div {
+  width: 100%;
+  max-width: 420px;
   flex-direction: column;
-  margin-top: 70px;
-  width: 100vw;
-  height: 80vh;
+  align-self: start;
+  align-items: center;
+  justify-content: center;
+  margin: 35px 15px;
 }
 
 .Profile {
-  padding: 20px;
+  padding: 10px;
   width: 100%;
   max-width: 350px;
   min-width: 300px;
   border-radius: 10px;
-  margin: 20px 15px;
-  box-shadow: 0 0 7px 5px #fc02fb, 0 0 10px 7px #fc02fb, 0 0 15px 10px #fc02fb;
+  margin: 15px;
+  margin-top: 0px;
   cursor: pointer;
 }
+.Profile-guest {
+  padding: 10px;
+  width: 100%;
+  max-width: 350px;
+  min-width: 300px;
+  border-radius: 10px;
+  margin: 15px;
+  margin-top: 0px;
+  cursor: pointer;
+  box-shadow: 0 0 7px 5px #fc02fb, 0 0 10px 7px #fc02fb, 0 0 15px 10px #fc02fb;
+}
+.vertical-text {
+  writing-mode: vertical-rl; /* vertical text from right to left */
+  text-orientation: mixed; /* upright characters */
+  transform: rotate(180deg); /* optional: rotate to read from bottom to top */
+  font-size: small;
+  font-weight: 700;
+  padding: 10px;
+  color: #fc02fb;
+  background-color: black;
+  /* border: 1px solid black; */
+}
+
+.Profile-spaces {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  padding: 10px;
+  max-width: 800px;
+}
+.Profile-cards {
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 25px;
+}
+
 .Profile-welcome {
   font-size: x-large;
-  color: #000000;
-  text-shadow: 0 0 5px white, 0 0 10px white, 0 0 15px white, 0 0 20px white;
+  color: #fc02fb;
 }
 .Profile input:focus {
   outline-color: #fc02fb;
@@ -98,9 +175,9 @@
 }
 
 .Profile-unlock {
-  color: #fc02fb;
+  color: white;
   font-size: small;
-  margin: 5px 10px;
+  margin: 5px 15px;
   border: 0.2px dotted #fc02fb;
   border-radius: 5px;
 }
@@ -153,6 +230,17 @@
 }
 
 .Profile-delete-warning {
+  font-size: medium;
+  font-weight: 500;
   margin-top: 25px;
   margin-bottom: 5px;
+}
+
+/* Media query for screens below 500px */
+@media (max-width: 500px) {
+  .vertical-text {
+    writing-mode: horizontal-tb; /* horizontal text from top to bottom */
+    text-orientation: initial; /* normal character orientation */
+    transform: rotate(0deg); /* no rotation needed */
+  }
 }

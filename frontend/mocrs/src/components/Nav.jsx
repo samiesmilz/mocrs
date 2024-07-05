@@ -17,9 +17,6 @@ const Nav = () => {
             <Link to="/new-space" className="Nav-create-space">
               Create space
             </Link>
-            <Link to="/logout" className="Nav-logout">
-              Logout
-            </Link>
           </>
         ) : (
           <>

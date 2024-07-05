@@ -1,11 +1,12 @@
 // Profile
 import { useState, useEffect } from "react";
 import "./Profile.css";
-import { updateUser, deleteUser } from "../services/api";
+import { updateUser, deleteUser, getUserRooms } from "../services/api";
 import { useAuth } from "./useAuth";
 import Nav from "./Nav";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import logo from "../assets/mocrs.gif";
+import Room from "./Room";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ const Profile = () => {
   const [formData, setFormData] = useState(initialData);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [rooms, setRooms] = useState([]);
 
   useEffect(() => {
     if (!isLoading && mocrsUser) {
@@ -32,6 +34,22 @@ const Profile = () => {
       setFormData({ ...userData, password: "" });
       setErrors({});
       setLocked(true);
+    }
+  }, [isLoading, mocrsUser]);
+
+  // Collect user spaces
+  useEffect(() => {
+    if (mocrsUser && !isLoading) {
+      const fetchUserSpaces = async () => {
+        try {
+          const response = await getUserRooms(mocrsUser?.id);
+          const userRooms = Array.isArray(response.data) ? response.data : [];
+          setRooms(userRooms);
+        } catch (error) {
+          console.error("Error fetching user spaces:", error);
+        }
+      };
+      fetchUserSpaces();
     }
   }, [isLoading, mocrsUser]);
 
@@ -82,7 +100,6 @@ const Profile = () => {
         }
 
         login(updatedUser, token);
-
         setLocked(true);
         console.log("Profile updated successfully.");
       } catch (error) {
@@ -110,6 +127,10 @@ const Profile = () => {
     }
   };
 
+  const handleMint = () => {
+    navigate("/new-space");
+  };
+
   if (isLoading) {
     return (
       <div className="LiveSpace">
@@ -127,8 +148,8 @@ const Profile = () => {
     return (
       <div className="Profile-Div">
         <Nav />
-        <div className="Profile-wrapper-div">
-          <div className="Profile">
+        <div className="Profile-guest-div">
+          <div className="Profile-guest">
             <h3 className="Profile-heading">
               Hi there, this could be your profile. 🐶
             </h3>
@@ -148,113 +169,152 @@ const Profile = () => {
   return (
     <div className="Profile-Div">
       <Nav />
+      <div className="Profile-logout">
+        <Link to="/logout" className="Profile-logout-link">
+          Logout
+        </Link>
+      </div>
       <div className="Profile-wrapper-div">
-        <h1 className="Profile-welcome">Hi, {formData?.firstName}</h1>
+        <div className="Profile-form-div">
+          <h1 className="Profile-welcome">Hi, {formData?.firstName} 😊</h1>
+          <small>Welcome back! 🌟 Manage your mocrs profile here. ⚙️</small>
+          <form className="Profile">
+            <div>
+              <h5 className="Profile-heading">
+                Manage your account
+                <button
+                  onClick={unLock}
+                  className="Profile-unlock"
+                  type="button"
+                  disabled={isSubmitting}
+                >
+                  Edit profile
+                </button>
+              </h5>
+            </div>
 
-        <form className="Profile">
-          <div>
-            <h5 className="Profile-heading">
-              Manage your account
-              <button
-                onClick={unLock}
-                className="Profile-unlock"
-                type="button"
-                disabled={isSubmitting}
-              >
-                Edit profile
-              </button>
-            </h5>
-          </div>
+            <div>
+              <label htmlFor="username">Username</label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                value={formData.username}
+                autoComplete="username"
+                disabled
+              />
+            </div>
 
-          <div>
-            <label htmlFor="username">Username</label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              value={formData.username}
-              autoComplete="username"
-              disabled
-            />
-          </div>
+            <div>
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                autoComplete="email"
+                onChange={handleChange}
+                disabled={locked || isSubmitting}
+              />
+              {errors.email && <p className="error">{errors.email}</p>}
+            </div>
 
-          <div>
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              autoComplete="email"
-              onChange={handleChange}
+            <div>
+              <label htmlFor="firstName">First Name</label>
+              <input
+                type="text"
+                id="firstName"
+                name="firstName"
+                value={formData.firstName}
+                autoComplete="given-name"
+                onChange={handleChange}
+                disabled={locked || isSubmitting}
+              />
+              {errors.firstName && <p className="error">{errors.firstName}</p>}
+            </div>
+
+            <div>
+              <label htmlFor="lastName">Last Name</label>
+              <input
+                type="text"
+                id="lastName"
+                name="lastName"
+                value={formData.lastName}
+                autoComplete="family-name"
+                onChange={handleChange}
+                disabled={locked || isSubmitting}
+              />
+              {errors.lastName && <p className="error">{errors.lastName}</p>}
+            </div>
+
+            <div>
+              <label htmlFor="password">Password (required for update)</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={formData.password}
+                autoComplete="current-password"
+                onChange={handleChange}
+                disabled={locked || isSubmitting}
+              />
+              {errors.password && <p className="error">{errors.password}</p>}
+            </div>
+
+            {errors.submit && <p className="error">{errors.submit}</p>}
+
+            <button
+              type="submit"
+              className="Profile-submit"
               disabled={locked || isSubmitting}
-            />
-            {errors.email && <p className="error">{errors.email}</p>}
-          </div>
-
+              onClick={handleSubmit}
+            >
+              {isSubmitting ? "Updating..." : "Update Profile"}
+            </button>
+          </form>
           <div>
-            <label htmlFor="firstName">First Name</label>
-            <input
-              type="text"
-              id="firstName"
-              name="firstName"
-              value={formData.firstName}
-              autoComplete="given-name"
-              onChange={handleChange}
-              disabled={locked || isSubmitting}
-            />
-            {errors.firstName && <p className="error">{errors.firstName}</p>}
+            <p className="Profile-delete-warning">
+              This action cannot be undone 😬
+            </p>
+            <button
+              className="Profile-delete"
+              onClick={handleDelete}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Processing..." : "Delete your account 🔥"}
+            </button>
           </div>
-
-          <div>
-            <label htmlFor="lastName">Last Name</label>
-            <input
-              type="text"
-              id="lastName"
-              name="lastName"
-              value={formData.lastName}
-              autoComplete="family-name"
-              onChange={handleChange}
-              disabled={locked || isSubmitting}
-            />
-            {errors.lastName && <p className="error">{errors.lastName}</p>}
+        </div>
+        <div className="Profile-spaces">
+          <div className="Profile-cards">
+            {rooms.map((room) => (
+              <Room key={room.id} room={room} />
+            ))}
+            {rooms.length === 0 ? (
+              <>
+                {" "}
+                <div className="Room-space-holder">
+                  <button className="Room-mint-button" onClick={handleMint}>
+                    mint space
+                  </button>
+                </div>
+                <div className="Room-space-holder">
+                  <button className="Room-mint-button" onClick={handleMint}>
+                    mint space
+                  </button>
+                </div>
+              </>
+            ) : rooms.length === 1 ? (
+              <div className="Room-space-holder">
+                <button className="Room-mint-button" onClick={handleMint}>
+                  mint space
+                </button>
+              </div>
+            ) : (
+              ""
+            )}
           </div>
-
-          <div>
-            <label htmlFor="password">Password (required for update)</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              autoComplete="current-password"
-              onChange={handleChange}
-              disabled={locked || isSubmitting}
-            />
-            {errors.password && <p className="error">{errors.password}</p>}
-          </div>
-
-          {errors.submit && <p className="error">{errors.submit}</p>}
-
-          <button
-            type="submit"
-            className="Profile-submit"
-            disabled={locked || isSubmitting}
-            onClick={handleSubmit}
-          >
-            {isSubmitting ? "Updating..." : "Update Profile"}
-          </button>
-        </form>
-        <small className="Profile-delete-warning">
-          This action cannot be undone.
-        </small>
-        <button
-          className="Profile-delete"
-          onClick={handleDelete}
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? "Processing..." : "Delete your account 😬⛔️🚮"}
-        </button>
+        </div>
       </div>
     </div>
   );

@@ -31,6 +31,30 @@ let interfaceConfig = {
     enabled: true,
     src: ico,
   },
+  TOOLBAR_BUTTONS: [
+    "microphone",
+    "camera",
+    "closedcaptions",
+    "desktop",
+    "fullscreen",
+    "fodeviceselection",
+    "hangup",
+    "chat",
+    "video-blur",
+    "recording",
+    "livestreaming",
+    "etherpad",
+    "sharedvideo",
+    "settings",
+    "raisehand",
+    "videoquality",
+    "filmstrip",
+    "shortcuts",
+    "tileview",
+    "download",
+    "help",
+    { key: "invite", preventExecution: true },
+  ],
 };
 
 const LiveSpace = () => {
@@ -175,6 +199,8 @@ const LiveSpace = () => {
           },
           prejoinPageEnabled: true,
           disableDeepLinking: true,
+          disableModeratorIndicator: true,
+          useHostPageLocalStorage: true,
         }}
         interfaceConfigOverwrite={interfaceConfig}
         userInfo={{

@@ -91,7 +91,7 @@ const NewSpaceForm = () => {
             value={formData.description}
             onChange={handleChange}
             required
-            maxLength={250}
+            maxLength={220}
           />
           <select
             name="room_type"
@@ -99,7 +99,7 @@ const NewSpaceForm = () => {
             onChange={handleChange}
           >
             <option value="meeting">Meeting</option>
-            <option value="social">Stream</option>
+            <option value="social">Social</option>
             <option value="study">Study</option>
             <option value="stream">Stream</option>
             <option value="focus">Focus</option>

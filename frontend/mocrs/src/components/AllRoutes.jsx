@@ -11,6 +11,7 @@ import SignUpForm from "./SignUpForm";
 import Profile from "./Profile";
 import Logout from "./Logout";
 import ProtectedRoute from "./ProtectedRoute";
+import ManageSpace from "./ManageSpace";
 
 const AllRoutes = () => {
   return (
@@ -31,6 +32,7 @@ const AllRoutes = () => {
         <Route path="/signup" element={<SignUpForm />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/logout" element={<Logout />} />
+        <Route path="/manage/:id" element={<ManageSpace />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </div>

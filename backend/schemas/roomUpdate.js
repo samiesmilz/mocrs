@@ -1,4 +1,4 @@
-const newRoomSchema = {
+const roomUpdateSchema = {
   $schema: "http://json-schema.org/draft-07/schema#",
   $id: "http://example.com/roomSchema.json",
   type: "object",
@@ -27,4 +27,4 @@ const newRoomSchema = {
   required: ["name", "room_type", "creator_id"],
 };
 
-export default newRoomSchema;
+export default roomUpdateSchema;
