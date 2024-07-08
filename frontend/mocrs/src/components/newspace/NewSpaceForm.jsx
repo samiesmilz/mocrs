@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createRoom } from "../services/api";
-import { useAuth } from "./useAuth";
-import Nav from "../components/Nav";
+import { createRoom } from "../../services/api";
+import { useAuth } from "../useAuth";
+import Nav from "../nav/Nav";
 import "./NewSpaceForm.css";
-import logo from "../assets/mocrs.gif";
+import logo from "../../assets/mocrs.gif";
 
 const NewSpaceForm = () => {
   const { mocrsUser, token } = useAuth();

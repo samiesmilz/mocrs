@@ -1,9 +1,9 @@
 import { useState } from "react";
 import "./LoginForm.css";
-import { loginUser } from "../services/api";
+import { loginUser } from "../../services/api";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "./useAuth";
-import Nav from "../components/Nav";
+import { useAuth } from "../useAuth";
+import Nav from "../nav/Nav";
 
 const LoginForm = () => {
   const navigate = useNavigate();

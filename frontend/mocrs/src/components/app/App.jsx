@@ -1,8 +1,8 @@
 // App.jsx
 import { BrowserRouter } from "react-router-dom";
 import "./App.css";
-import AllRoutes from "./components/AllRoutes";
-import { AuthProvider } from "./components/AuthProvider";
+import AllRoutes from "../AllRoutes";
+import { AuthProvider } from "../AuthProvider";
 
 function App() {
   return (

@@ -1,16 +1,16 @@
 "use strict";
 
 import express from "express";
-import jsonschema from "jsonschema";
 import jwt from "jsonwebtoken";
 import User from "../models/user.js";
 import userAuthSchema from "../schemas/userAuth.js";
 import userRegisterSchema from "../schemas/userRegister.js";
-import { BadRequestError } from "../middleware/expressError.js";
 import { SECRET_KEY } from "../config.js";
 import { generateJitsiToken } from "../helpers/tokens.js";
 import { createToken } from "../helpers/tokens.js";
 import "colors";
+import validateSchema from "../middleware/validateSchema.js";
+
 const router = express.Router();
 
 /**
@@ -18,21 +18,20 @@ const router = express.Router();
  * Returns JWT token which can be used to authenticate further requests.
  * Authorization required: none
  */
-
-router.post("/login", async (req, res, next) => {
-  try {
-    const { error } = jsonschema.validate(req.body, userAuthSchema); //  validation error
-    if (error) {
-      throw new BadRequestError(error.details.map((e) => e.message)); // Format validation errors
+router.post(
+  "/login",
+  validateSchema(userAuthSchema),
+  async (req, res, next) => {
+    try {
+      const { username, password } = req.body;
+      const user = await User.authenticate(username, password);
+      const token = createToken(user);
+      return res.json({ user, token });
+    } catch (err) {
+      next(err);
     }
-    const { username, password } = req.body;
-    const user = await User.authenticate(username, password);
-    const token = createToken(user);
-    return res.json({ user, token });
-  } catch (err) {
-    next(err);
   }
-});
+);
 
 /**
  * POST /auth/register:   { user } => { token }
@@ -40,20 +39,19 @@ router.post("/login", async (req, res, next) => {
  * Returns JWT token which can be used to authenticate further requests.
  * Authorization required: none
  */
-
-router.post("/register", async (req, res, next) => {
-  try {
-    const { error } = jsonschema.validate(req.body, userRegisterSchema);
-    if (error) {
-      throw new BadRequestError(error.details.map((e) => e.message));
+router.post(
+  "/register",
+  validateSchema(userRegisterSchema),
+  async (req, res, next) => {
+    try {
+      const newUser = await User.register({ ...req.body, isAdmin: false });
+      const token = createToken(newUser);
+      return res.status(201).json({ newUser, token });
+    } catch (err) {
+      next(err);
     }
-    const newUser = await User.register({ ...req.body, isAdmin: false });
-    const token = createToken(newUser);
-    return res.status(201).json({ newUser, token });
-  } catch (err) {
-    next(err);
   }
-});
+);
 
 /**
  * POST /auth/jtoken
@@ -62,9 +60,7 @@ router.post("/register", async (req, res, next) => {
  * Returns { token } upon successful authentication.
  * Authorization required: none explicitly, but handled implicitly via token.
  */
-
 router.post("/jtoken", (req, res) => {
-  // The user is now available in req.user
   let user = req.body.user;
   if (user && user.token) {
     const token = user.token;
@@ -75,8 +71,6 @@ router.post("/jtoken", (req, res) => {
       return res.status(401).json({ error: "Invalid token" });
     }
   } else {
-    // If no token is provided or token is null
-
     user = {
       username: "Guest",
       email: "",
@@ -94,21 +88,20 @@ router.post("/jtoken", (req, res) => {
  * Returns JWT token which can be used to authenticate further requests.
  * Authorization required: none
  */
-
-router.post("/token", async (req, res, next) => {
-  try {
-    const { error } = jsonschema.validate(req.body, userAuthSchema);
-    if (error) {
-      throw new BadRequestError(error.details.map((e) => e.message));
+router.post(
+  "/token",
+  validateSchema(userAuthSchema),
+  async (req, res, next) => {
+    try {
+      const { username, password } = req.body;
+      const user = await User.authenticate(username, password);
+      const token = createToken(user);
+      console.log(`${user.username} assigned token`.green);
+      return res.json({ token });
+    } catch (err) {
+      next(err);
     }
-    const { username, password } = req.body;
-    const user = await User.authenticate(username, password);
-    const token = createToken(user);
-    console.log(`${user.username} assigned token`.green);
-    return res.json({ token });
-  } catch (err) {
-    next(err);
   }
-});
+);
 
 export default router;

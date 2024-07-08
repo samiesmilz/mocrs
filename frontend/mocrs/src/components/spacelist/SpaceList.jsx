@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getAllRooms } from "../services/api";
-import Space from "./Space";
-import Nav from "./Nav";
-import { useAuth } from "./useAuth";
-import logo from "../assets/mocrs.gif";
+import { getAllRooms } from "../../services/api";
+import Space from "../space/Space";
+import Nav from "../nav/Nav";
+import { useAuth } from "../useAuth";
+import logo from "../../assets/mocrs.gif";
 import "./SpaceList.css";
 
 const SpaceList = () => {

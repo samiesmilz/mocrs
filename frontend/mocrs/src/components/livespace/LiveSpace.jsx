@@ -1,17 +1,17 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { JitsiMeeting } from "@jitsi/react-sdk";
 import { useParams, useNavigate } from "react-router-dom";
-import { useAuth } from "./useAuth";
+import { useAuth } from "../useAuth";
 import {
   getRoom,
   joinRoom,
   leaveRoom,
   createJitsiToken,
-} from "../services/api";
+} from "../../services/api";
 import "./LiveSpace.css";
-import Nav from "./Nav";
-import ico from "../assets/mocrs.ico";
-import logo from "../assets/mocrs.gif";
+import Nav from "../nav/Nav";
+import ico from "../../assets/mocrs.ico";
+import logo from "../../assets/mocrs.gif";
 
 let interfaceConfig = {
   DEFAULT_LOGO_URL: logo,

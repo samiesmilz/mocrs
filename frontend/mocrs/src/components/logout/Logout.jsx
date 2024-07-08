@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "./useAuth";
-import logo from "../assets/mocrs.gif";
-import Nav from "./Nav";
+import { useAuth } from "../useAuth";
+import logo from "../../assets/mocrs.gif";
+import Nav from "../nav/Nav";
 
 const Logout = () => {
   const { logout } = useAuth();

@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "./useAuth";
+import { useAuth } from "../useAuth";
 import PropTypes from "prop-types";
 import "./ProtectedRoute.css";
-import Nav from "./Nav";
-import logo from "../assets/mocrs.gif";
+import Nav from "../nav/Nav";
+import logo from "../../assets/mocrs.gif";
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth();

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import navlogo from "../assets/nav-logo.gif";
-import { useAuth } from "./useAuth";
+import navlogo from "../../assets/nav-logo.gif";
+import { useAuth } from "../useAuth";
 import "./Nav.css";
 const Nav = () => {
   const { mocrsUser } = useAuth();

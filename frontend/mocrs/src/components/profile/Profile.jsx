@@ -1,12 +1,12 @@
 // Profile
 import { useState, useEffect } from "react";
 import "./Profile.css";
-import { updateUser, deleteUser, getUserRooms } from "../services/api";
-import { useAuth } from "./useAuth";
-import Nav from "./Nav";
+import { updateUser, deleteUser, getUserRooms } from "../../services/api";
+import { useAuth } from "../useAuth";
+import Nav from "../nav/Nav";
 import { useNavigate, Link } from "react-router-dom";
-import logo from "../assets/mocrs.gif";
-import Room from "./Room";
+import logo from "../../assets/mocrs.gif";
+import Room from "../room/Room";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -70,8 +70,9 @@ const Profile = () => {
     if (!formData.firstName) newErrors.firstName = "First Name is required.";
     if (!formData.lastName) newErrors.lastName = "Last Name is required.";
     if (!formData.password) newErrors.password = "Password is required.";
-    if (formData.password && formData.password.length < 3) {
-      newErrors.password = "Password must be at least 3 characters long.";
+    if (formData.password && formData.password.length < 5) {
+      newErrors.password =
+        "Valid password required - must be at least 5 characters.";
     }
     return newErrors;
   };

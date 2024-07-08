@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import logo from "../assets/mocrs.gif";
+import logo from "../../assets/mocrs.gif";
 
 import "./Home.css";
 

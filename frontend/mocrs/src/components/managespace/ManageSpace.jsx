@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { updateRoom, deleteRoom } from "../services/api";
-import { useAuth } from "./useAuth";
-import Nav from "../components/Nav";
+import { updateRoom, deleteRoom } from "../../services/api";
+import { useAuth } from "../useAuth";
+import Nav from "../nav/Nav";
 import "./ManageSpace.css";
-import logo from "../assets/mocrs.gif";
+import logo from "../../assets/mocrs.gif";
 
 const ManageSpace = () => {
   const location = useLocation();

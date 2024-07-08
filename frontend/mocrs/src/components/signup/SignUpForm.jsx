@@ -1,9 +1,9 @@
 import { useState } from "react";
 import "./SignUpForm.css";
-import { registerUser } from "../services/api";
+import { registerUser } from "../../services/api";
 import { useNavigate, Link } from "react-router-dom";
-import Nav from "./Nav";
-import { useAuth } from "./useAuth";
+import Nav from "../nav/Nav";
+import { useAuth } from "../useAuth";
 
 const SignUpForm = () => {
   const navigate = useNavigate();
@@ -38,7 +38,9 @@ const SignUpForm = () => {
     const newErrors = {};
     if (!formData.firstName) newErrors.firstName = "First Name is required.";
     if (!formData.lastName) newErrors.lastName = "Last Name is required.";
-    if (!password) newErrors.password = "Password is required.";
+    if (!password || password.length < 5)
+      newErrors.password =
+        "Valid password required - must be at least 5 characters.";
     if (password !== confirmPassword)
       newErrors.confirmPassword = "Passwords do not match.";
     return newErrors;

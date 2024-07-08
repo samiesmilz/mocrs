@@ -2,16 +2,16 @@
 
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import Home from "./Home";
-import SpaceList from "./SpaceList";
-import NewSpaceForm from "./NewSpaceForm";
-import LiveSpace from "./LiveSpace";
-import LoginForm from "./LoginForm";
-import SignUpForm from "./SignUpForm";
-import Profile from "./Profile";
-import Logout from "./Logout";
-import ProtectedRoute from "./ProtectedRoute";
-import ManageSpace from "./ManageSpace";
+import Home from "./home/Home";
+import SpaceList from "./spacelist/SpaceList";
+import NewSpaceForm from "./newspace/NewSpaceForm";
+import LiveSpace from "./livespace/LiveSpace";
+import LoginForm from "./login/LoginForm";
+import SignUpForm from "./signup/SignUpForm";
+import Profile from "./profile/Profile";
+import Logout from "./logout/Logout";
+import ProtectedRoute from "./protectedroute/ProtectedRoute";
+import ManageSpace from "./managespace/ManageSpace";
 
 const AllRoutes = () => {
   return (
