@@ -13,6 +13,11 @@ import Logout from "./logout/Logout";
 import ProtectedRoute from "./protectedroute/ProtectedRoute";
 import ManageSpace from "./managespace/ManageSpace";
 
+// Admin imports
+import AdminProtectedRoute from "./adminprotectedroute/AdminProtectedRoute";
+import UserList from "./admin/UserList"; // Placeholder
+import EditUser from "./admin/EditUser"; // Placeholder
+
 const AllRoutes = () => {
   return (
     <div>
@@ -33,6 +38,25 @@ const AllRoutes = () => {
         <Route path="/profile" element={<Profile />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/manage/:id" element={<ManageSpace />} />
+
+        {/* Admin Routes */}
+        <Route
+          path="/admin/users"
+          element={
+            <AdminProtectedRoute>
+              <UserList />
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/users/:username/edit"
+          element={
+            <AdminProtectedRoute>
+              <EditUser />
+            </AdminProtectedRoute>
+          }
+        />
+
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </div>

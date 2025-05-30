@@ -12,6 +12,12 @@ const Nav = () => {
       <div className="Nav-links">
         <Link to="/spaces">Spaces</Link>
 
+        {mocrsUser && mocrsUser.isAdmin && (
+          <Link to="/admin/users" className="Nav-admin-link">
+            Admin
+          </Link>
+        )}
+
         {mocrsUser !== null ? (
           <>
             <Link to="/new-space" className="Nav-create-space">

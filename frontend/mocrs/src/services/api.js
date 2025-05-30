@@ -62,6 +62,10 @@ export const getUserByUsername = (username) =>
 export const updateUser = (username, data) =>
   apiClient.patch(`/users/${username}`, data);
 
+export const getAllUsers = () => apiClient.get("/users");
+export const adminUpdateUser = (username, userData) => apiClient.patch(`/users/${username}`, userData);
+export const adminDeleteUser = (username) => apiClient.delete(`/users/${username}`);
+
 // Jitsi routes (keep for now or comment out if fully removing Jitsi related API calls)
 // export const createJitsiToken = (data) => apiClient.post("/auth/jtoken", data);
 

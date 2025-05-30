@@ -24,6 +24,9 @@ const userUpdateSchema = {
       maxLength: 60,
       format: "email",
     },
+    isAdmin: {
+      type: "boolean",
+    },
   },
   additionalProperties: false,
   required: [],

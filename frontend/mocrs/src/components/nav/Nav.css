@@ -63,3 +63,15 @@ a {
   border-radius: 7px;
   color: rgb(250, 250, 250);
 }
+
+/* Style for the Admin link to match other navigation links */
+.Nav-admin-link {
+  color: white;
+  text-decoration: none;
+  margin-left: 20px;
+  font-size: 1rem;
+}
+
+.Nav-admin-link:hover {
+  text-decoration: underline; /* Consistent hover effect */
+}
