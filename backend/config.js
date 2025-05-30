@@ -28,6 +28,11 @@ const getDatabaseUri = () =>
 // Set BCRYPT_WORK_FACTOR based on environment
 const BCRYPT_WORK_FACTOR = process.env.NODE_ENV === "test" ? 1 : 12;
 
+// LiveKit Configuration
+export const LIVEKIT_API_KEY = process.env.LIVEKIT_API_KEY || "your_api_key";
+export const LIVEKIT_API_SECRET = process.env.LIVEKIT_API_SECRET || "your_api_secret";
+export const LIVEKIT_HOST = process.env.LIVEKIT_HOST || "http://localhost:7880";
+
 // Log configuration details with colorful output
 const isDevelopment = process.env.NODE_ENV === "development";
 if (isDevelopment) {
@@ -36,9 +41,16 @@ if (isDevelopment) {
   console.log("BCRYPT_WORK_FACTOR:".yellow, BCRYPT_WORK_FACTOR);
   console.log("Database:".yellow, getDatabaseUri());
   console.log("---");
+  console.log("LiveKit API Key:".yellow, LIVEKIT_API_KEY);
+  console.log("LiveKit API Secret:".yellow, LIVEKIT_API_SECRET ? '********' : 'NOT SET');
+  console.log("LiveKit Host:".yellow, LIVEKIT_HOST);
+  console.log("---");
 }
 // Export configuration as an object using object shorthand syntax
 export {
+  LIVEKIT_API_KEY,
+  LIVEKIT_API_SECRET,
+  LIVEKIT_HOST,
   SECRET_KEY,
   PORT,
   BCRYPT_WORK_FACTOR,

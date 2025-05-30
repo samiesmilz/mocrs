@@ -13,9 +13,10 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
-    "@jitsi/react-sdk": "^1.4.0",
+    "@livekit/components-react": "^2.9.9",
     "axios": "^1.7.2",
     "dotenv": "^16.4.5",
+    "livekit-client": "^2.13.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.1"

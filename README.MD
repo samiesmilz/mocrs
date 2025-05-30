@@ -57,7 +57,7 @@ MOCRs are designed for lifelong learners and enthusiasts of all ages, including:
 
 - **Framework**: React
 - **Routing**: React Router
-- **Real-time Communication**: Jitsi SDK
+- **Real-time Communication**: LiveKit (using `livekit-client` and `@livekit/components-react`)
 - **HTTP Client**: Axios
 - **Package Manager**: Vite
 
@@ -67,11 +67,14 @@ MOCRs are designed for lifelong learners and enthusiasts of all ages, including:
 - **Database**: PostgreSQL
 - **Authentication**: JSON Web Tokens (JWT)
 - **Environment Management**: dotenv
+- **Real-time Communication**: LiveKit (using `livekit-server-sdk` for token generation)
 - **Miscellaneous**: bcrypt, morgan, cors
 
 ## 6. SDKs Used
 
-- **Jitsi React SDK**: For real-time video and audio communication.
+- **LiveKit React Components (`@livekit/components-react`)**: For building LiveKit video conferencing UI in React.
+- **LiveKit Client SDK (`livekit-client`)**: Core SDK for connecting to LiveKit rooms.
+- **LiveKit Server SDK (`livekit-server-sdk`)**: For generating access tokens on the backend.
 
 ## 7. Usage
 
@@ -105,14 +108,17 @@ MOCRs are designed for lifelong learners and enthusiasts of all ages, including:
 
 - **AllRoutes.jsx**: Defines the routing for the application.
 - **SpaceList.jsx**: Component to list and manage spaces.
-- **LiveSpace.jsx**: Component for live space interaction using Jitsi.
-- **api.js**: Handles API requests.
+- **LiveSpace.jsx**: Component for hosting the live video experience, now using LiveKit.
+- **LiveKitRoom.jsx**: Component responsible for rendering the LiveKit video conference UI, including participant display and media controls.
+- **api.js**: Handles API requests (now includes LiveKit token fetching).
 
 ### 8.2 Backend
 
 - **app.js**: Main application setup with middleware and routes.
+- **routes/auth.js**: Handles authentication, user registration, and now includes an endpoint for generating LiveKit tokens.
 - **routes/roomRoutes.js**: Routes for room-related operations.
 - **controllers/roomController.js**: Controllers for room-related logic.
+- **helpers/tokens.js**: Contains helper functions for generating JWTs, including Jitsi (if still partially used) and LiveKit tokens.
 - **middleware/auth.js**: Middleware for authentication.
 - **middleware/rateLimiter.js**: Middleware for rate limiting.
 
@@ -133,9 +139,11 @@ MOCRs are designed for lifelong learners and enthusiasts of all ages, including:
 - `GET /api/users/:username`: Fetch user details by username.
 - `PATCH /api/users/:username`: Update user details.
 
-### 9.3 Jitsi Token Endpoint
+### 9.3 LiveKit Token Endpoint
 
-- `POST /api/auth/jtoken`: Create a Jitsi token for a user to join a room.
+- `POST /api/auth/livekit-token`: Generate an access token for a user to join a LiveKit room.
+  - **Request Body**: `{ "roomName": "string", "identity": "string" (optional), "name": "string" (optional), "isModerator": boolean (optional) }`
+  - **Response**: `{ "token": "string" (LiveKit JWT) }`
 
 ## 10. Database
 
@@ -196,7 +204,11 @@ cd mocrs
    DATABASE_URL=your_database_url
    JWT_SECRET=your_jwt_secret
    FRONTEND_URL=http://localhost:5173
+   LIVEKIT_API_KEY=your_livekit_api_key
+   LIVEKIT_API_SECRET=your_livekit_api_secret
+   LIVEKIT_HOST=your_livekit_server_url (e.g., http://localhost:7880, used by server SDK)
    ```
+   Ensure you have a LiveKit server instance running. Refer to the official LiveKit documentation for server setup options.
 
 4. Run the backend server:
    ```bash
@@ -221,6 +233,7 @@ cd mocrs
 
    ```env
    BACKEND_URL=http://localhost:5001/api
+   VITE_LIVEKIT_URL=your_livekit_websocket_url (e.g., ws://localhost:7880 or wss://your-project.livekit.cloud)
    ```
 
 4. Run the frontend development server:

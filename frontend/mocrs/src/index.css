@@ -4,9 +4,11 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
+  color: rgba(255, 255, 255, 0.87); /* Default dark theme text color */
+  background-color: #242424; /* Default dark theme background */
+  /* The font-family is already well-defined with Inter and fallbacks.
+     The prompt suggested -apple-system, etc., which is a good general fallback,
+     but Inter is a modern choice. Let's ensure it's the primary. */
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -24,10 +26,16 @@ a:hover {
 
 body {
   margin: 0;
+  padding: 0; /* Added padding reset */
   display: flex;
   min-width: 320px;
   min-height: 100vh;
   overflow-x: hidden;
+  /* The existing :root color and background-color will likely override these body settings
+     for users with prefers-color-scheme. This is fine.
+     These act as a base if :root styles are not applied or for elements outside :root's direct scope. */
+  background-color: #f8f9fa; /* Light background for the whole app - base */
+  color: #212529; /* Default text color - base */
 }
 
 h1 {
@@ -56,28 +64,37 @@ button:focus-visible {
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #150e16;
-    background-color: #ffffff;
+    color: #212529; /* Ensure light mode text is dark */
+    background-color: #f8f9fa; /* Ensure light mode bg is light */
   }
 
   a:hover {
-    color: #fc02fb;
+    color: #7e017d; /* Slightly darker pink for light mode hover */
   }
   button {
-    background-color: black;
+    background-color: #f0f0f0; /* Lighter buttons for light mode */
+    color: #212529; /* Dark text on light buttons */
   }
 }
 
 @media (prefers-color-scheme: dark) {
   /* Dark mode styles */
   :root {
-    background-color: #0f0f17;
-    color: #ffffff;
+    background-color: #121212; /* Standard dark theme background */
+    color: #e0e0e0; /* Slightly off-white for dark mode text */
   }
   a {
-    color: #fdf8fd;
+    color: #bb86fc; /* Material Design dark theme accent for links */
   }
   a:hover {
-    color: #bcfafc;
+    color: #9e69d1;
+  }
+  button {
+    background-color: #1e1e1e; /* Darker buttons */
+    color: #e0e0e0; /* Light text on dark buttons */
+    border-color: #333; /* Subtle border for dark buttons */
+  }
+  button:hover {
+    border-color: #bb86fc; /* Accent color on hover */
   }
 }

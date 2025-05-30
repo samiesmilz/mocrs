@@ -1,28 +1,63 @@
-.Space {
+/* In frontend/mocrs/src/components/space/Space.css */
+.Space { /* This is the container for an individual space's content within the .Space-card Link */
+  background-color: #ffffff; /* New background */
+  border-radius: 8px; /* Consistent with .Space-card in SpaceList.css */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Softer shadow */
+  padding: 20px; /* New padding */
+  color: #333; /* Default text color for card content */
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  width: 100%; /* Ensure it fills the Link area width */
+  height: 100%; /* Ensure it fills the Link area height */
   display: flex;
   flex-direction: column;
-  align-items: center;
-  background-color: #e49fcc23;
-  width: 350px;
-  height: 275px;
-  border-radius: 8px;
-  padding: 10px 20px;
-  color: rgb(103, 101, 103);
-  font-size: smaller;
-  justify-content: center;
+  justify-content: space-between; /* Pushes meta to bottom if card heights vary */
+  align-items: flex-start; /* Align content to the start */
+  text-align: left; /* Ensure text is left-aligned */
 }
 
-.Space:hover {
-  color: white;
-  box-shadow: 0 0 1px 1px #fc02fb, 0 0 2px 2px #fc02fb, 0 0 2px 2px #fc02fb;
-  cursor: pointer;
-  border-radius: 10px;
+.Space:hover { /* This hover effect is on the Space content itself */
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  color: #333; /* Keep text color consistent on hover, or adjust as needed */
+  /* cursor: pointer; */ /* Already on .Space-card (Link) */
 }
 
-.Space-title {
-  color: white;
+/* Assuming .Space-title is used for the room name based on previous CSS */
+.Space-title, .Space h3 { /* Target existing class or h3 if used as per prompt */
+  font-size: 1.4rem;
+  margin-top: 0; /* Remove default top margin */
+  margin-bottom: 10px;
+  color: #333; /* Darker color for better readability on white background */
 }
+
+.Space p { /* Assuming room description is in a p */
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 15px;
+  line-height: 1.6;
+  flex-grow: 1; /* Allow description to take available space */
+}
+
+.Space-meta { /* For any additional info like participant count or type */
+  font-size: 0.85rem;
+  color: #777;
+  margin-top: auto; /* Push meta to the bottom */
+}
+
+/* Style for Join-space button if it's still used within the card */
 .Join-space {
-  background-color: #fc02a4ad;
+  background-color: #007bff; /* Align with Get-started button style */
   color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.Join-space:hover {
+  background-color: #0056b3;
 }

@@ -62,5 +62,9 @@ export const getUserByUsername = (username) =>
 export const updateUser = (username, data) =>
   apiClient.patch(`/users/${username}`, data);
 
-// Jitsi routes
-export const createJitsiToken = (data) => apiClient.post("/auth/jtoken", data);
+// Jitsi routes (keep for now or comment out if fully removing Jitsi related API calls)
+// export const createJitsiToken = (data) => apiClient.post("/auth/jtoken", data);
+
+// LiveKit routes
+export const createLiveKitToken = (data) => apiClient.post("/auth/livekit-token", data);
+// data should be like { roomName: string, identity?: string, name?: string }

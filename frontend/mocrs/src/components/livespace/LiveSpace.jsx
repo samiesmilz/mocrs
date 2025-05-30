@@ -1,92 +1,69 @@
-import { useState, useEffect, useCallback, useRef } from "react";
-import { JitsiMeeting } from "@jitsi/react-sdk";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../useAuth";
-import {
-  getRoom,
-  joinRoom,
-  leaveRoom,
-  createJitsiToken,
-} from "../../services/api";
+import { getRoom, createLiveKitToken } from "../../services/api"; // Import createLiveKitToken
+import LiveKitRoom from "../livekitroom/LiveKitRoom";
 import "./LiveSpace.css";
 import Nav from "../nav/Nav";
-import ico from "../../assets/mocrs.ico";
 import logo from "../../assets/mocrs.gif";
 
-let interfaceConfig = {
-  DEFAULT_LOGO_URL: logo,
-  DEFAULT_WELCOME_PAGE_LOGO_URL: logo,
-  JITSI_WATERMARK_LINK: "join.mocrs.com",
-  DEFAULT_REMOTE_DISPLAY_NAME: "Fellow Mocrstar",
-  SHOW_JITSI_WATERMARK: false,
-  SHOW_WATERMARK_FOR_GUESTS: false,
-  SHOW_BRAND_WATERMARK: false,
-  BRAND_WATERMARK_LINK: "",
-  SHOW_POWERED_BY: false,
-  SHOW_PROMOTIONAL_CLOSE_PAGE: false,
-  MOBILE_APP_PROMO: false,
-  DISABLE_JOIN_LEAVE_NOTIFICATIONS: true,
-  HIDE_INVITE_MORE_HEADER: true,
-  FAVICON: {
-    enabled: true,
-    src: ico,
-  },
-  TOOLBAR_BUTTONS: [
-    "microphone",
-    "camera",
-    "closedcaptions",
-    "desktop",
-    "fullscreen",
-    "fodeviceselection",
-    "hangup",
-    "chat",
-    "video-blur",
-    "recording",
-    "livestreaming",
-    "etherpad",
-    "sharedvideo",
-    "settings",
-    "raisehand",
-    "videoquality",
-    "filmstrip",
-    "shortcuts",
-    "tileview",
-    "download",
-    "help",
-    { key: "invite", preventExecution: true },
-  ],
-};
+const LIVEKIT_SERVER_URL = import.meta.env.VITE_LIVEKIT_URL || "ws://localhost:7880"; // Get from .env
 
 const LiveSpace = () => {
-  const { mocrsUser } = useAuth();
+  const { mocrsUser } = useAuth(); // Contains user info like username, firstName
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { id: roomId } = useParams(); // Renamed id to roomId for clarity
   const [room, setRoom] = useState(null);
   const [error, setError] = useState(null);
-  const [token, setToken] = useState(null);
+  const [liveKitToken, setLiveKitToken] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const jitsiApiRef = useRef(null);
 
   useEffect(() => {
     const fetchRoomAndToken = async () => {
+      if (!roomId) {
+        setError("No Room ID provided.");
+        setIsLoading(false);
+        return;
+      }
       try {
-        const roomResponse = await getRoom(id);
-        setRoom(roomResponse.data);
-        if (!roomResponse.data) {
+        setIsLoading(true);
+        const roomResponse = await getRoom(roomId);
+        const currentRoom = roomResponse.data;
+        setRoom(currentRoom);
+
+        if (!currentRoom) {
           setError("Room not found");
+          setIsLoading(false);
+          return;
         }
-        if (mocrsUser !== null) {
-          const data = { ...roomResponse.data, user: mocrsUser };
-          const tokenResponse = await createJitsiToken(data);
-          setToken(tokenResponse.data.token);
-          console.log("User established:");
-        } else {
-          setToken(null);
-        }
-      } catch (error) {
-        console.error("Error fetching room or creating token:", error);
+
+        // Prepare user info for LiveKit token
+        // Identity should be unique for each user.
+        // Name is the display name in the LiveKit room.
+        const liveKitUserInfo = {
+          identity: mocrsUser?.username || `guest-${Math.random().toString(36).substr(2, 5)}`,
+          name: mocrsUser?.firstName || "Guest User"
+        };
+
+        // Determine if the current user is the creator, thus a moderator
+        // Assuming currentRoom.creator_id and mocrsUser.id are available and comparable
+        // This logic might need adjustment based on actual data structure for creator_id and user id
+        const isModerator = mocrsUser && currentRoom.creator_id === mocrsUser.id;
+
+
+        // Fetch LiveKit token
+        const tokenResponse = await createLiveKitToken({
+          roomName: currentRoom.name, // Use room name from fetched room details
+          identity: liveKitUserInfo.identity,
+          name: liveKitUserInfo.name,
+          isModerator: isModerator // Pass moderator status
+        });
+        setLiveKitToken(tokenResponse.data.token);
+
+      } catch (err) {
+        console.error("Error fetching room or LiveKit token:", err);
         setError(
-          error.response?.data?.message || "An unexpected error occurred"
+          err.response?.data?.message || "Failed to load room or token."
         );
       } finally {
         setIsLoading(false);
@@ -94,51 +71,18 @@ const LiveSpace = () => {
     };
 
     fetchRoomAndToken();
+  }, [roomId, mocrsUser]); // mocrsUser is a dependency for token generation
 
-    return () => {
-      if (jitsiApiRef.current) {
-        jitsiApiRef.current.dispose();
-      }
-    };
-  }, [id, mocrsUser]);
-
-  const handleMeetingEnd = useCallback(() => {
+  const handleMeetingEnd = useCallback(() => { // This might be triggered by LiveKitRoom later
     navigate("/spaces");
   }, [navigate]);
 
-  const handleClick = () => {
+  const handleClickToLogin = () => {
     navigate("/login");
   };
 
-  const handleAPIReady = useCallback(
-    (apiObj) => {
-      jitsiApiRef.current = apiObj;
-
-      const eventHandlers = {
-        participantJoined: () => joinRoom(id).catch(console.error),
-        participantLeft: () => leaveRoom(id).catch(console.error),
-        videoConferenceLeft: () => {
-          console.log("User left the meeting!");
-          handleMeetingEnd();
-        },
-      };
-
-      // Add event listeners
-      Object.entries(eventHandlers).forEach(([event, handler]) => {
-        apiObj.addEventListener(event, handler);
-      });
-
-      // Return cleanup function
-      return () => {
-        Object.entries(eventHandlers).forEach(([event, handler]) => {
-          apiObj.removeEventListener(event, handler);
-        });
-      };
-    },
-    [id, handleMeetingEnd]
-  );
-
   if (error) {
+    // ... (error rendering - no change needed here)
     return (
       <div className="LiveSpace">
         <Nav />
@@ -155,7 +99,8 @@ const LiveSpace = () => {
   }
 
   if (isLoading) {
-    return (
+    // ... (loading rendering - no change needed here)
+     return (
       <div className="LiveSpace">
         <Nav />
         <div className="loading-container">
@@ -167,54 +112,60 @@ const LiveSpace = () => {
     );
   }
 
-  if (!room || !token) {
+  // If not logged in and no token (or room details) yet, prompt to login
+  // This logic might need refinement based on when liveKitToken becomes available
+  if (!mocrsUser && !liveKitToken) {
+         return (
+          <div className="LiveSpace">
+            <Nav />
+            <div className="loading-container">
+              <img src={logo} alt="MOCRS Logo" className="LiveSpace-loading" />
+              <p className="loading">Join the conversation...</p>
+              <p className="loading-notify">
+                Please 👉🏼{" "}
+                <button onClick={handleClickToLogin} className="loading-login">
+                  login/signup
+                </button>{" "}
+                to instantly access rooms. 🎉
+              </p>
+            </div>
+          </div>
+        );
+  }
+
+  if (!room || !liveKitToken) {
+    // Handles cases where room data isn't loaded or token isn't fetched yet, even if logged in.
+    // Or if a guest user still waiting for token.
     return (
-      <div className="LiveSpace">
-        <Nav />
-        <div className="loading-container">
-          <img src={logo} alt="MOCRS Logo" className="LiveSpace-loading" />
-          <p className="loading">Join the conversation...</p>
-          <p className="loading-notify">
-            Please 👉🏼{" "}
-            <button onClick={handleClick} className="loading-login">
-              login/signup
-            </button>{" "}
-            to instally access rooms. 🎉
-          </p>
+        <div className="LiveSpace">
+            <Nav />
+            <div className="loading-container">
+                <img src={logo} alt="MOCRS Logo" className="LiveSpace-loading" />
+                <p className="loading">Preparing LiveKit room...</p>
+                {!liveKitToken && <small className="loading-notify">Waiting for access token...</small>}
+            </div>
         </div>
-      </div>
     );
   }
 
   return (
     <div className="LiveSpace">
       <Nav />
+      <LiveKitRoom
+        token={liveKitToken}
+        serverUrl={LIVEKIT_SERVER_URL}
+        roomName={room.name} // Pass the actual room name
+        // Pass a callback for when user leaves, so LiveSpace can navigate
+        onLeave={handleMeetingEnd}
+      />
+      {/* Comment out JitsiMeeting component
       <JitsiMeeting
         domain="join.mocrs.com"
         roomName={room.name}
         jwt={token}
-        configOverwrite={{
-          reactions: {
-            enabled: true,
-          },
-          prejoinPageEnabled: true,
-          disableDeepLinking: true,
-          disableModeratorIndicator: true,
-          useHostPageLocalStorage: true,
-        }}
-        interfaceConfigOverwrite={interfaceConfig}
-        userInfo={{
-          displayName: mocrsUser?.firstName || "",
-          email: mocrsUser?.email || "",
-        }}
-        onApiReady={handleAPIReady}
-        onReadyToClose={handleMeetingEnd}
-        getIFrameRef={(node) => {
-          if (node) {
-            node.style.height = "93vh";
-          }
-        }}
+        // ... other Jitsi props
       />
+      */}
     </div>
   );
 };

@@ -1,0 +1,79 @@
+/* In frontend/mocrs/src/components/livekitroom/LiveKitRoom.css */
+.livekit-room-container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 70px); /* Assuming Nav is ~60-70px, adjust as needed */
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.livekit-video-conference {
+  display: flex; /* Allow main stage and participant list to sit side-by-side */
+  flex-grow: 1;
+  width: 100%;
+  height: 100%; /* Ensure it fills the container */
+  background-color: #121212; /* Dark background for the video area */
+  color: #f1f1f1; /* Light text for dark background */
+}
+
+.livekit-main-stage {
+  flex-grow: 1; /* Main video area takes most space */
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Fill the height of .livekit-video-conference */
+  /* background-color: #1a1a1a; */ /* Moved this specific dark shade to overall .livekit-video-conference */
+}
+
+/* Ensure GridLayout and ControlBar fit well within livekit-main-stage */
+/* The @livekit/components-react components are generally well-behaved in flex containers. */
+
+.livekit-participant-list {
+  width: 250px; /* Fixed width for the sidebar */
+  padding: 15px;
+  border-left: 1px solid #444; /* Separator line */
+  background-color: #1e1e1e; /* Slightly different dark shade for the list */
+  overflow-y: auto; /* Scroll if list is long */
+  height: 100%; /* Fill the height */
+  box-sizing: border-box;
+}
+
+.livekit-participant-list h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #e0e0e0;
+  font-size: 1.1rem;
+  border-bottom: 1px solid #383838;
+  padding-bottom: 8px;
+}
+
+.livekit-participant-list ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.livekit-participant-list li {
+  padding: 8px 0;
+  font-size: 0.95rem;
+  color: #cccccc;
+  border-bottom: 1px solid #2c2c2c; /* Subtle separator for items */
+}
+.livekit-participant-list li:last-child {
+  border-bottom: none;
+}
+
+/* Optional: Customize control bar appearance if needed */
+/* Example:
+[data-lk-theme='default'] .lk-control-bar {
+  background-color: rgba(0, 0, 0, 0.85);
+  border-top: 1px solid #333;
+  padding: 0.75rem 1rem;
+}
+*/
+
+/* Ensure participant names are visible on dark background if using default tiles */
+[data-lk-theme='default'] .lk-participant-name {
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.7);
+}
