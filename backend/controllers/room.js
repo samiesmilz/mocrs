@@ -77,9 +77,9 @@ export async function getRoom(req, res, next) {
  */
 export async function updateRoom(req, res, next) {
   try {
-    const { id } = req.params;
+    const { id: uuid } = req.params;
     const data = req.body;
-    const room = await Room.update(id, data);
+    const room = await Room.update(uuid, data);
     res.status(201).json(room);
   } catch (err) {
     next(err);
@@ -99,8 +99,8 @@ export async function updateRoom(req, res, next) {
  */
 export async function deleteRoom(req, res, next) {
   try {
-    const { id } = req.params;
-    const name = await Room.delete(id);
+    const { id: uuid } = req.params;
+    const name = await Room.delete(uuid);
     res.status(204).json(name);
   } catch (err) {
     next(err);
